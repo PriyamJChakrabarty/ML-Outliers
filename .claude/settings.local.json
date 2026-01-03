@@ -7,7 +7,10 @@
       "Bash(cat:*)",
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(xcopy:*)",
+      "Bash(mkdir:*)",
+      "Bash(timeout:*)"
     ]
   }
 }
