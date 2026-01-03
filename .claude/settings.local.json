@@ -10,7 +10,9 @@
       "Bash(npm install:*)",
       "Bash(xcopy:*)",
       "Bash(mkdir:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(del \"VERIFICATION.md\")",
+      "Bash(if exist \"VERIFICATION.md\" del \"VERIFICATION.md\")"
     ]
   }
 }
