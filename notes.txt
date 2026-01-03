@@ -1,0 +1,41 @@
+Ok let me clearly give an example of one problem so that u know how the problems are structured
+
+
+
+So like There will be a data plot basically a plot of many data points with x axis as quant 1 and y as target value.....the points are all distributed cluttered around along a rounghly curve that looks like a exponential curve
+
+
+
+It then asks the User what would u suggest to be done to get the best output
+
+
+
+Then the user types in something
+
+
+
+I will run something like gemini api or some inbuilt llm to check whether the suggestion and the correct answers match
+
+
+
+The correct answer here is to implement a log transform here
+
+
+
+Remember this data plot is not something we plot dynamically it would be be more like a component animation - or some simple image
+
+
+
+
+
+
+
+SO NOW U HAVE AN IDEA OF HOW EACH PROBLEM IS STRUCTURED!!!
+
+
+
+We can also add various other such playful insightful exercises
+
+
+
+Also I shall also include another section where i shall display all the important resource links in a tickbox style progression kinda thing so that the learners stay on track.....But this will be a side aspect of the platform other than the MAIN ML PLAY APP
