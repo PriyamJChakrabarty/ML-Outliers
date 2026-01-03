@@ -17,7 +17,7 @@ export const info = {
 
   // Multi-page configuration
   multiPage: true,
-  totalPages: 4,
+  totalPages: 5,
 
   // Page-specific content
   pages: [
@@ -123,6 +123,16 @@ But here's the thing: not all of this matters. Some features are just noise. Fin
           'Owner Age': "Generally doesn't have to do much with the condition of the car",
           'Highway Miles (%)': "Well it seems important, but mind it - it is not verified and only claimed by the owner!",
         },
+      },
+    },
+
+    // Page 5: Completion page
+    {
+      pageNumber: 5,
+      type: 'completion',
+      prompt: {
+        heading: 'Hurray! 🎉',
+        body: 'You have finished the exercise!',
       },
     },
   ],

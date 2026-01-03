@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { markComplete } from '@/lib/completionTracker';
+import { useRouter } from 'next/navigation';
 import styles from './Visual.module.css';
 
 /**
@@ -19,9 +20,10 @@ export default function Visual({ problemInfo }) {
   const [selectedFeaturesPage4, setSelectedFeaturesPage4] = useState(new Set());
   const [showFeedbackPage4, setShowFeedbackPage4] = useState(false);
   const [showAnswerPage4, setShowAnswerPage4] = useState(false);
+  const router = useRouter();
 
   const pages = problemInfo?.pages || [];
-  const totalPages = problemInfo?.totalPages || 4;
+  const totalPages = problemInfo?.totalPages || 5;
   const currentPageData = pages.find(p => p.pageNumber === currentPage);
 
   // Load CSV data for page 4
@@ -61,6 +63,11 @@ export default function Visual({ problemInfo }) {
       setShowFeedback(false);
       setShowAnswer(false);
     }
+  };
+
+  const handleCompletion = () => {
+    markComplete('dropping-the-junk');
+    router.push('/');
   };
 
   // Feature selection handlers
@@ -129,8 +136,12 @@ export default function Visual({ problemInfo }) {
             setShowFeedback={setShowFeedbackPage4}
             showAnswer={showAnswerPage4}
             setShowAnswer={setShowAnswerPage4}
+            goToNextPage={goToNextPage}
           />
         );
+
+      case 'completion':
+        return <CompletionPage data={currentPageData} handleCompletion={handleCompletion} />;
 
       default:
         return null;
@@ -179,7 +190,11 @@ export default function Visual({ problemInfo }) {
           </button>
         )}
 
-        {!currentPageData?.hasNextButton && currentPage < totalPages && (
+        {!currentPageData?.hasNextButton && currentPage < totalPages && currentPageData?.type !== 'data-analysis' && currentPageData?.type !== 'completion' && (
+          <div style={{ width: '120px' }}></div>
+        )}
+
+        {currentPageData?.type === 'completion' && (
           <div style={{ width: '120px' }}></div>
         )}
       </div>
@@ -395,7 +410,8 @@ function DataAnalysisPage({
   showFeedback,
   setShowFeedback,
   showAnswer,
-  setShowAnswer
+  setShowAnswer,
+  goToNextPage
 }) {
   const [showPlot, setShowPlot] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -428,11 +444,6 @@ function DataAnalysisPage({
 
     setShowFeedback(true);
     setShowAnswer(false);
-
-    // Mark problem as complete if correct
-    if (isCorrect) {
-      markComplete('dropping-the-junk');
-    }
 
     return isCorrect;
   };
@@ -643,6 +654,9 @@ function DataAnalysisPage({
                         </p>
                       ))}
                     </div>
+                    <button onClick={goToNextPage} className={styles.continueButton}>
+                      Continue →
+                    </button>
                   </>
                 ) : (
                   <>
@@ -673,11 +687,29 @@ function DataAnalysisPage({
                     </p>
                   ))}
                 </div>
+                <button onClick={goToNextPage} className={styles.continueButton}>
+                  Continue →
+                </button>
               </div>
             )}
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+// Page 5: Completion
+function CompletionPage({ data, handleCompletion }) {
+  return (
+    <div className={styles.completionPage}>
+      <div className={styles.completionContent}>
+        <h1 className={styles.completionHeading}>{data.prompt.heading}</h1>
+        <p className={styles.completionMessage}>{data.prompt.body}</p>
+        <button onClick={handleCompletion} className={styles.returnButton}>
+          Return to Modules
+        </button>
+      </div>
     </div>
   );
 }

@@ -15,6 +15,8 @@ import { info as logTransformInfo } from './LinearRegression/log-transform/info.
 import LogTransformVisual from './LinearRegression/log-transform/Visual.jsx';
 import { info as droppingJunkInfo } from './LinearRegression/dropping-the-junk/info.js';
 import DroppingJunkVisual from './LinearRegression/dropping-the-junk/Visual.jsx';
+import { info as categoricalFeaturesInfo } from './LinearRegression/categorical-features/info.js';
+import CategoricalFeaturesVisual from './LinearRegression/categorical-features/Visual.jsx';
 
 // Registry object: Maps problem slug to problem module
 const problemsRegistry = {
@@ -26,6 +28,11 @@ const problemsRegistry = {
   'dropping-the-junk': {
     info: droppingJunkInfo,
     Visual: DroppingJunkVisual,
+  },
+
+  'categorical-features': {
+    info: categoricalFeaturesInfo,
+    Visual: CategoricalFeaturesVisual,
   },
 
   // Add more problems here as you create them

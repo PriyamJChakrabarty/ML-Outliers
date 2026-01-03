@@ -725,6 +725,60 @@
   text-transform: uppercase;
 }
 
+/* Completion Page */
+.completionPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+}
+
+.completionContent {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.completionHeading {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
+  animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.completionMessage {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 3rem;
+  font-weight: 600;
+}
+
+.returnButton {
+  padding: 1.25rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.returnButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .pageContent {
@@ -760,5 +814,9 @@
   .checkButton,
   .seeAnswerButton {
     width: 100%;
+  }
+
+  .completionHeading {
+    font-size: 2.5rem;
   }
 }
