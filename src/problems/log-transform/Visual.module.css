@@ -1,0 +1,60 @@
+.visualContainer {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s;
+}
+
+.imageWrapper:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: #f97316;
+}
+
+.plotImage {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
+.caption {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.captionText {
+  font-size: 0.95rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.captionText strong {
+  color: #2d3748;
+  font-style: normal;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .visualContainer {
+    padding: 1rem 0;
+  }
+
+  .imageWrapper {
+    padding: 1rem;
+  }
+
+  .captionText {
+    font-size: 0.875rem;
+  }
+}

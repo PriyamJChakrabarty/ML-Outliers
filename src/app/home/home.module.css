@@ -595,6 +595,7 @@
 }
 
 .moduleButton {
+  display: inline-block;
   padding: 0.75rem 2rem;
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: white;
@@ -605,6 +606,8 @@
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25);
+  text-decoration: none;
+  text-align: center;
 }
 
 .moduleButton:hover {

@@ -1,25 +1,51 @@
 'use client';
 
 import { UserButton } from '@clerk/nextjs';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getAllProblems } from '@/problems/index.js';
+import { getCompletions } from '@/lib/completionTracker';
 import styles from './home.module.css';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('challenge');
-
-  // Mock data - will be replaced with real data later
-  const stats = {
+  const [stats, setStats] = useState({
     exercisesCompleted: 0,
     modulesCompleted: 0,
     totalExercises: 42,
     totalModules: 8
-  };
+  });
+
+  // Load completion stats
+  useEffect(() => {
+    const allProblems = getAllProblems();
+    const completions = getCompletions();
+
+    setStats({
+      exercisesCompleted: completions.size,
+      modulesCompleted: 0, // TODO: Calculate based on module completion
+      totalExercises: 42, // Total planned
+      totalModules: 8
+    });
+
+    // Listen for completion updates
+    const handleCompletionUpdate = () => {
+      const updatedCompletions = getCompletions();
+      setStats(prev => ({
+        ...prev,
+        exercisesCompleted: updatedCompletions.size
+      }));
+    };
+
+    window.addEventListener('completion-updated', handleCompletionUpdate);
+    return () => window.removeEventListener('completion-updated', handleCompletionUpdate);
+  }, []);
 
   const modules = [
     {
       id: 1,
+      slug: 'LinearRegression',
       name: 'Linear Regression',
       description: 'Master the fundamentals of linear regression and understand when to use it',
       completedExercises: 0,
@@ -28,6 +54,7 @@ export default function HomePage() {
     },
     {
       id: 2,
+      slug: 'LogisticRegression',
       name: 'Logistic Regression',
       description: 'Learn classification techniques with logistic regression',
       completedExercises: 0,
@@ -36,6 +63,7 @@ export default function HomePage() {
     },
     {
       id: 3,
+      slug: 'DecisionTrees',
       name: 'Decision Trees',
       description: 'Understand tree-based models and their applications',
       completedExercises: 0,
@@ -231,9 +259,9 @@ export default function HomePage() {
                     </div>
 
                     {!module.locked && (
-                      <button className={styles.moduleButton}>
+                      <Link href={`/module/${module.slug}`} className={styles.moduleButton}>
                         {module.completedExercises === 0 ? 'Start Module' : 'Continue'}
-                      </button>
+                      </Link>
                     )}
                   </div>
                 ))}
