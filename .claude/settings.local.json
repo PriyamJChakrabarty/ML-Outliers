@@ -12,7 +12,10 @@
       "Bash(mkdir:*)",
       "Bash(timeout:*)",
       "Bash(del \"VERIFICATION.md\")",
-      "Bash(if exist \"VERIFICATION.md\" del \"VERIFICATION.md\")"
+      "Bash(if exist \"VERIFICATION.md\" del \"VERIFICATION.md\")",
+      "Bash(if exist \"src\\\\app\\\\api\\\\webhooks\" rmdir /s /q \"src\\\\app\\\\api\\\\webhooks\")",
+      "Bash(cmd /c \"if exist src\\\\app\\\\api\\\\webhooks rmdir /s /q src\\\\app\\\\api\\\\webhooks\")",
+      "Bash(npm run build:*)"
     ]
   }
 }

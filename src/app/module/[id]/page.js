@@ -1,7 +1,6 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
-import { UserButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProblemsByModule } from '@/problems/index.js';
@@ -70,7 +69,6 @@ export default function ModulePage({ params }) {
             <span>Back to Home</span>
           </Link>
           <Image src="/logo.png" alt="ML Outliers" width={150} height={30} />
-          <UserButton afterSignOutUrl="/" />
         </nav>
 
         <main className={styles.main}>
@@ -106,8 +104,6 @@ export default function ModulePage({ params }) {
             className={styles.navLogo}
           />
         </div>
-
-        <UserButton afterSignOutUrl="/" />
       </nav>
 
       <main className={styles.main}>
