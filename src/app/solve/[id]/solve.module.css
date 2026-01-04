@@ -448,6 +448,15 @@
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
+.continueButtonIncorrect {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+}
+
+.continueButtonIncorrect:hover {
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+}
+
 /* Error Page */
 .errorCard {
   text-align: center;
