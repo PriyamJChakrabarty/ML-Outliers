@@ -15,7 +15,10 @@
       "Bash(if exist \"VERIFICATION.md\" del \"VERIFICATION.md\")",
       "Bash(if exist \"src\\\\app\\\\api\\\\webhooks\" rmdir /s /q \"src\\\\app\\\\api\\\\webhooks\")",
       "Bash(cmd /c \"if exist src\\\\app\\\\api\\\\webhooks rmdir /s /q src\\\\app\\\\api\\\\webhooks\")",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c \"taskkill /F /IM node.exe\")",
+      "Bash(cmd /c \"netstat -ano | findstr :3000\")"
     ]
   }
 }
