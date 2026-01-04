@@ -1,0 +1,319 @@
+
+Next problem names - "To Err is Human!"
+
+
+First page - this dramatic quote displayed magnificiently
+
+
+To Err is Human, To Err Randomly is Statistically Divine
+
+
+Second page
+
+
+Normal distribution is a continuous probability distribution that is **symmetric about the mean**, depicting that **data near the mean are more frequent in occurrence than data far from the mean**.
+
+
+This is the famous Bell Curve!
+
+
+public\assets\LinearRegression\ResidualPlot\normal.png
+
+
+the formula is given by 
+
+public\assets\LinearRegression\ResidualPlot\formula.png
+
+where,
+
+x is Random Variable (or data point)
+μ is Mean
+σ is Standard Deviation
+
+if we replace μ as 0 and σ as 1, the resultant distribution is called ** Standard Normal Distribution **, symmetric about x = 0
+
+Credit : https://www.geeksforgeeks.org/maths/normal-distribution/
+
+Note: Please remember this formula and the graph, it will help you throughout your B.Tech
+
+
+Next Page
+
+
+public\assets\LinearRegression\ResidualPlot\sirgalton.png - image
+
+Sir Francis Galton,a renowned statistician in his 1889 work, Natural Inheritance called the Normal Distribution as **"Supreme Law"**, awestruck by the distribution that he described the way large groups of "unfiltered" data points spontaneously organize themselves into the **Bell curve**
+
+Next page
+
+In Linear Regression, the fundamental assumption is that 
+
+- Data distribution is a combination of a signal and noise
+- The noise is normally distributed
+
+
+public\assets\LinearRegression\ResidualPlot\linregform.png
+
+Here Y is the target variable
+
+For each independent variable X (basically the features upon which the target variable is dependent)
+
+- we have f(X), a deterministic signal (basically a mathematically well defined function like quadratic, line, cubic, etc)
+- A random noise, or deviation that follows normal distribution
+
+
+Next page
+
+The problem boils down to finding the "Signal Pattern", such that the remaining noise is normally distributed.
+
+If we can crack the ** Deterministic Signal **, we have won the game !
+
+For identifying the underlying pattern, we have a "Gold Standard" !
+
+** The Residual Plot **
+
+Residual plots are graphical representations of the residuals against the predictor variables in a regression analysis.
+
+
+X-Axis: Fitted Values (Predicted Values)
+Y-Axis: Residual (Residual = Observed Value (Value in the dataset)- Predicted Value)
+
+
+Resources to learn from 
+
+https://www.geeksforgeeks.org/maths/residual-analysis/
+https://youtu.be/iMdtTCX2Q70?si=gC2UBrzzVsvO6m4l
+https://youtu.be/_IlAuhLPi30?si=qSj9Sugx29J3pl_B
+
+
+This is an ideal residual plot
+public\assets\LinearRegression\ResidualPlot\idealresidual.png 
+
+See how the residuals form a cloud around the mean 0 line.
+
+The cloud does not have any pattern! It looks completely random, and occupy almost the same region uniformly around the mean line (it is not thick or thin at any end).
+
+This shows that our linear regression model has been able to crack the signal function and all that remains is the random (normally distributed) noise.
+
+We will be able to get very good predictions!
+
+Next page
+
+This residual plot is a serious **Red Flag**
+
+C:\Users\Priyam\Documents\Temp\Projects\Latest\ML-Outliers\public\assets\LinearRegression\ResidualPlot\badresidual.png
+
+
+Notice that we can clearly see a pattern in the residuals!
+
+There is something that we are missing.
+
+You can think as if our model is not yet able to determine what signal the data is following.
+
+But! ** It also gives us the hint, of how to tweak our model so that we can fit to the data better **
+
+Next page
+
+The basic way is that - We run a multiple linear regression after doing the feature selection and then analyse the residual plot
+
+And then decide how to change the hypothesis(basically the prediction function which is h = w_0 + w_1x1 + w_2x2 + ......)
+
+Next page
+
+So this is the residual plot that you get with respect to x2
+
+C:\Users\Priyam\Documents\Temp\Projects\Latest\ML-Outliers\public\assets\LinearRegression\ResidualPlot\badresidual.png
+
+
+what do you think the change should be in the hypothesis?
+
+
+h = w_0 + w_1x1 + w_2x2 + w_3x3 + ....
+
+h = w_0 + w_1x1 + w_2x2^2 + w_3x3 + ...
+
+h = w_0 + w_1x1^2 + w_2x2^2 + w_3x3^2 + ....
+
+h = w_0 + w_1x1^2 + w_2x2^3 + w_3x3^4 + ....
+
+CORRECT ANSWER IS 2nd one
+
+See Answer should also be there
+
+Remark : The pattern clearly shows that there is a non-linear relationship, likely on the basis of the plot, a quadratic relationship with respect to x_2
+
+
+MAKE SURE THE TEXT FOLLOWS THE TEXT_FORMAT_GUIDE.md....AND ABSOLUTE BEAUTIFICATION!!!
+
+----------------------------------------------------------------------------------------
+
+
+
+
+> When I get a wrong answer the right answer should    
+  be coloured green....and add a continue sign will    
+  also occur there with the wrong answer card!
+
+  Also add the hurray page in the err problem like in  
+  the which categories are important problem
+
+  And it should route back to the parent module        
+  page..not to landing page!!
+
+
+
+
+
+The next problem named "More about Residuals!"
+
+
+First page
+
+“If one technique of data analysis were to be exalted above all others for its ability to be revealing to the mind… the simple graph has brought more information to the data analyst’s mind than any other device."
+
+- John W. Tukey, father of Exploratory Data Analysis (EDA)
+
+
+(Keep it in quotes and make it big and dynamic!!! But no boxes)
+
+
+Next Page
+
+Residual plots are diagnostic powerhouses.
+
+In the next few examples,  you'll see residual plots expose different issues—each time showing you exactly where there are scope for improvement.
+
+They can tell you when your model is lying to you, when it's missing something important, and when your assumptions are falling apart.
+
+
+Next Page
+
+
+Missing interaction between terms
+
+
+In linear regression, we assume each predictor affects the "Signal" independently. However, a missing interaction occurs when the effect of one predictor depends on the value of another—like how the impact of "Heat" on "Comfort" changes based on "Humidity."
+
+When an interaction is missing, the model fails to capture this joint behavior, causing predictive information to "leak" into the residuals.
+
+To solve this, first we need to find out which features have an interaction!
+
+Residual plots actually help us find those.
+
+Next Page
+
+Interact Plot 
+
+
+A simple 2D plot between independent feature X1 and the target variable Y, but also "color coding" the data points based on their values of another independent feature X2, and see if there is any pattern!
+
+To learn more about Interaction Plots -
+
+https://interactions.jacob-long.com/articles/interactions - Note that this is R library, but gives conceptual understanding about interaction plot
+
+https://seaborn.pydata.org/tutorial/regression.html - official documentation of Seaborn, use the hue parameter to visualize how the "Signal" changes across different categories.
+
+
+Next page 
+
+For distinct feature X2, we colour code the data points based on different categories
+
+Here Y = Petal Length, X1 = Petal Width, X2 = Petal Width
+
+public\assets\LinearRegression\MoreResiduals\intcategory.png
+
+Look how the three different categories are represented by three colours
+
+The three lines show the best fit lines across each category
+
+
+
+Next page
+
+For continuous feature X2, we colour code based on some threshold - like z
+
+More like one colour for all X2 values < mean(X2) - z, one for all X2 values > mean(X2) + z, and another for all values in between
+
+See the below image, Murder is the X2 chosen and the Standard Deviation (SD) of it is the value of z
+
+public\assets\LinearRegression\MoreResiduals\intregression.png
+
+
+Next page
+
+Now that we know about Interaction Plots, let us look into identifying interaction between features using residual plots.
+
+But we do not need to check for all the feature combinations, we just need to check for the features which do not fit into the regression assumptions of the current model
+
+I hope you remember how to do it!
+
+( Give a whisper emoji ) Just see if the residual plot follows a pattern, or is a random cloud!
+
+
+Next page
+
+To see the interaction, we take the residual plot of Y vs X1 feature, and generate an interaction plot with another feature X2
+
+public\assets\LinearRegression\MoreResiduals\intploteg.png
+
+
+Next page 
+
+Jake Sully is now living a peaceful life after the 2nd Pandorian War. He has now become a farmer. His son Lo'ak has collected data related to previous crop yields. Jake wants to find out if some features interact and determine crop yield together? He has created several Residual Interaction Plots. Observe and flag the possible interactions
+
+
+public\assets\LinearRegression\MoreResiduals\plot1.png
+Soil pH	- Nitrogen Levels
+	
+public\assets\LinearRegression\MoreResiduals\plot2.png
+Precipitation Average Temp
+
+public\assets\LinearRegression\MoreResiduals\plot3.png
+Seed Quantity	Irrigation Type	
+
+public\assets\LinearRegression\MoreResiduals\plot4.png
+ Pest Density	Sunlight Hours	
+
+public\assets\LinearRegression\MoreResiduals\plot5.png
+Fertilizer Quantity	Planting Date
+
+options
+
+Soil pH	- Nitrogen Levels	
+
+Precipitation Average Temp	
+
+Seed Quantity	Irrigation Type	
+
+ Pest Density	Sunlight Hours	
+
+Fertilizer Quantity	Planting Date
+
+2nd and 5th are correct
+
+Remark - See if the color coding is not random, but instead kind of divides the cloud in groups or follow some distinct patterns
+
+Next page
+
+
+Once you have flagged the interactions between variables like X1 and X2, the next step is to incorporate their joint influence into your model.
+
+You simply add a new              
+ "Interaction Term" (X1 * X2) into your hypothesis.
+
+
+(Overly Beautified) Equation:  y = β0 + β1(X1) + β2(X2) + β3(X1 * X2) + ε
+
+
+MAKE SURE THE TEXT FOLLOWS THE TEXT_FORMAT_GUIDE.md....AND ABSOLUTE BEAUTIFICATION!!!
+USE COLORS, QUOTES, STYLISATION etc !!!!
+
+
+
+IF ANY IMAGE IS NOT PRESENT THAT MEANS I WILL ADD IT LATER....JUST ADD A PLACEHOLDER SO THAT THE MOMENT I ADD THE IMAGE IN THE SAME PATH IT SHOULD APPEAR
+
+Add the same hurray page and routing page here as well!!
+
+
+----------------------------------------------------------------
+

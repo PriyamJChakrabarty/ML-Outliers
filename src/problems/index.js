@@ -19,6 +19,10 @@ import { info as categoricalFeaturesInfo } from './LinearRegression/categorical-
 import CategoricalFeaturesVisual from './LinearRegression/categorical-features/Visual.jsx';
 import { info as residualPlotInfo } from './LinearRegression/residual-plot/info.js';
 import ResidualPlotVisual from './LinearRegression/residual-plot/Visual.jsx';
+import { info as moreResidualsInfo } from './LinearRegression/more-residuals/info.js';
+import MoreResidualsVisual from './LinearRegression/more-residuals/Visual.jsx';
+import { info as autocorrelationInfo } from './LinearRegression/autocorrelation/info.js';
+import AutocorrelationVisual from './LinearRegression/autocorrelation/Visual.jsx';
 
 // Registry object: Maps problem slug to problem module
 const problemsRegistry = {
@@ -40,6 +44,16 @@ const problemsRegistry = {
   'residual-plot': {
     info: residualPlotInfo,
     Visual: ResidualPlotVisual,
+  },
+
+  'more-residuals': {
+    info: moreResidualsInfo,
+    Visual: MoreResidualsVisual,
+  },
+
+  'autocorrelation': {
+    info: autocorrelationInfo,
+    Visual: AutocorrelationVisual,
   },
 
   // Add more problems here as you create them

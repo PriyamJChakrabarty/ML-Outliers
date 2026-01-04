@@ -42,7 +42,7 @@ export default function Visual({ problemInfo }) {
 
   const handleCompletion = () => {
     markComplete('residual-plot');
-    router.push('/');
+    router.push('/module/LinearRegression');
   };
 
   // Render different page types
@@ -69,9 +69,12 @@ export default function Visual({ problemInfo }) {
             setShowFeedback={setShowFeedback}
             showAnswer={showAnswer}
             setShowAnswer={setShowAnswer}
-            goToNextPage={handleCompletion}
+            goToNextPage={goToNextPage}
           />
         );
+
+      case 'completion':
+        return <CompletionPage data={currentPageData} handleCompletion={handleCompletion} />;
 
       default:
         return null;
@@ -452,10 +455,95 @@ function MultipleChoicePage({
             ))}
           </div>
           <button onClick={goToNextPage} className={styles.continueButton}>
-            Complete Challenge
+            Continue →
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+// Page 10: Completion Page
+function CompletionPage({ data, handleCompletion }) {
+  // Helper to render formatted text with bold
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    const parts = text.split('**');
+    return parts.map((part, idx) => {
+      if (idx % 2 === 1) {
+        return <strong key={idx} style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 700,
+          fontSize: '1.35rem'
+        }}>{part}</strong>;
+      }
+      return part;
+    });
+  };
+
+  return (
+    <div className={styles.completionPage}>
+      <div className={styles.completionContent}>
+        <h1 style={{
+          fontSize: '3rem',
+          fontWeight: 800,
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textAlign: 'center',
+          marginBottom: '2.5rem',
+          letterSpacing: '-0.02em'
+        }}>
+          {data.prompt.heading}
+        </h1>
+
+        <div style={{
+          maxWidth: '750px',
+          margin: '0 auto 3rem auto'
+        }}>
+          {data.prompt.body.split('\n\n').map((para, idx) => (
+            <p key={idx} style={{
+              fontSize: '1.3rem',
+              lineHeight: '1.9',
+              color: '#2d3748',
+              textAlign: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              {renderFormattedText(para)}
+            </p>
+          ))}
+        </div>
+
+        <button
+          onClick={handleCompletion}
+          style={{
+            padding: '1.2rem 3rem',
+            fontSize: '1.2rem',
+            fontWeight: 700,
+            color: 'white',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            border: 'none',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            display: 'block',
+            margin: '0 auto'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-3px)';
+            e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+          }}
+        >
+          Return to Linear Regression Module →
+        </button>
+      </div>
     </div>
   );
 }

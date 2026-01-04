@@ -1,0 +1,8 @@
+{
+  "metadata": {
+    "problem": "autocorrelation",
+    "type": "time-series-residual-analysis",
+    "description": "Educational problem about identifying autocorrelation in time series residual plots"
+  },
+  "note": "This problem uses pre-created images to demonstrate autocorrelation patterns. No dynamic data generation needed."
+}
