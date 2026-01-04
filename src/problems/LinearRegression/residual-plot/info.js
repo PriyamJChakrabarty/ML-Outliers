@@ -17,7 +17,7 @@ export const info = {
 
   // Multi-page configuration
   multiPage: true,
-  totalPages: 9,
+  totalPages: 10,
 
   // Page-specific content
   pages: [
@@ -261,6 +261,20 @@ By modifying only the x₂ term to x₂² while keeping other features linear, w
 - **Option 1:** Keeps everything linear, won't fix the pattern
 - **Option 3:** Transforms ALL features to quadratic, which is unnecessary and can lead to overfitting
 - **Option 4:** Uses different powers for different features without justification from the residual plot`,
+      },
+    },
+
+    // Page 10: Completion/Hurray Page
+    {
+      pageNumber: 10,
+      type: 'completion',
+      prompt: {
+        heading: 'Hurray! You\'ve Mastered Residual Analysis! 🎉',
+        body: `You've successfully learned how to read residual plots and modify your hypothesis to capture non-linear patterns!
+
+This skill is fundamental to building better regression models. By analyzing residual plots, you can identify when your model is missing important patterns and know exactly how to fix it.
+
+Remember: **A good residual plot is a random cloud. Any pattern is a clue for improvement!**`,
       },
     },
   ],
