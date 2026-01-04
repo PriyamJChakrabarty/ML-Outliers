@@ -1,8 +1,6 @@
 'use client';
 
-import { use } from 'react';
-import { UserButton } from '@clerk/nextjs';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProblem } from '@/problems/index.js';
@@ -37,7 +35,6 @@ export default function SolvePage({ params }) {
             width={150}
             height={30}
           />
-          <UserButton afterSignOutUrl="/" />
         </nav>
 
         <main className={styles.main}>
@@ -142,8 +139,6 @@ export default function SolvePage({ params }) {
             className={styles.navLogo}
           />
         </div>
-
-        <UserButton afterSignOutUrl="/" />
       </nav>
 
       <main className={styles.main}>
