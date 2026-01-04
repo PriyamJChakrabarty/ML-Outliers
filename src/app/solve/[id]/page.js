@@ -16,10 +16,12 @@ export default function SolvePage({ params }) {
 
   // State management
   const [userAnswer, setUserAnswer] = useState('');
+  const [selectedOption, setSelectedOption] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [hintIndex, setHintIndex] = useState(0);
+  const [isAnswered, setIsAnswered] = useState(false);
 
   // Handle case where problem doesn't exist
   if (!problem) {
@@ -60,56 +62,87 @@ export default function SolvePage({ params }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (userAnswer.trim().length < info.answer.minLength) {
-      setFeedback({
-        type: 'error',
-        title: 'Answer Too Short',
-        message: `Please provide an answer with at least ${info.answer.minLength} characters.`,
-      });
-      return;
-    }
+    // For text input (backward compatibility)
+    if (info.answer.type !== 'multiple-choice') {
+      if (userAnswer.trim().length < info.answer.minLength) {
+        setFeedback({
+          type: 'error',
+          title: 'Answer Too Short',
+          message: `Please provide an answer with at least ${info.answer.minLength} characters.`,
+        });
+        return;
+      }
 
-    setIsSubmitting(true);
-    setFeedback(null);
+      setIsSubmitting(true);
+      setFeedback(null);
 
-    try {
-      const response = await fetch('/api/check-answer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          problemId: id,
-          userAnswer: userAnswer.trim(),
-          expertAnswer: info.answer.expert,
-          threshold: info.answer.similarityThreshold,
-        }),
-      });
+      try {
+        const response = await fetch('/api/check-answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            problemId: id,
+            userAnswer: userAnswer.trim(),
+            expertAnswer: info.answer.expert,
+            threshold: info.answer.similarityThreshold,
+          }),
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (result.isCorrect) {
-        // Mark problem as completed
+        if (result.isCorrect) {
+          markComplete(id);
+          setFeedback({
+            type: 'success',
+            ...info.feedback.correct,
+            similarity: result.similarity,
+          });
+        } else {
+          setFeedback({
+            type: 'incorrect',
+            ...info.feedback.incorrect,
+            similarity: result.similarity,
+          });
+        }
+      } catch (error) {
+        setFeedback({
+          type: 'error',
+          title: 'Submission Error',
+          message: 'Failed to check your answer. Please try again.',
+        });
+        console.error('Submission error:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      // For multiple choice
+      if (!selectedOption) {
+        setFeedback({
+          type: 'error',
+          title: 'No Selection',
+          message: 'Please select an answer before submitting.',
+        });
+        return;
+      }
+
+      setIsSubmitting(true);
+      setIsAnswered(true);
+
+      const isCorrect = selectedOption === info.answer.correctAnswer;
+
+      if (isCorrect) {
         markComplete(id);
-
         setFeedback({
           type: 'success',
           ...info.feedback.correct,
-          similarity: result.similarity,
         });
       } else {
         setFeedback({
           type: 'incorrect',
           ...info.feedback.incorrect,
-          similarity: result.similarity,
         });
       }
-    } catch (error) {
-      setFeedback({
-        type: 'error',
-        title: 'Submission Error',
-        message: 'Failed to check your answer. Please try again.',
-      });
-      console.error('Submission error:', error);
-    } finally {
+
       setIsSubmitting(false);
     }
   };
@@ -177,24 +210,58 @@ export default function SolvePage({ params }) {
         {!info.multiPage && (
           <section className={styles.answerSection}>
           <form onSubmit={handleSubmit} className={styles.answerForm}>
-            <label htmlFor="answer" className={styles.inputLabel}>
-              Your Answer
-            </label>
-            <div className={styles.inputWrapper}>
-              <input
-                type="text"
-                id="answer"
-                value={userAnswer}
-                onChange={(e) => setUserAnswer(e.target.value)}
-                maxLength={info.answer.maxLength}
-                placeholder="Type your answer here..."
-                className={styles.answerInput}
-                disabled={isSubmitting}
-              />
-              <span className={styles.charCount}>
-                {userAnswer.length}/{info.answer.maxLength}
-              </span>
-            </div>
+            {info.answer.type === 'multiple-choice' ? (
+              <>
+                <label className={styles.inputLabel}>
+                  Choose the Correct Transformation
+                </label>
+                <div className={styles.optionsGrid}>
+                  {info.answer.options.map((option) => {
+                    const isSelected = selectedOption === option.id;
+                    const isCorrectAnswer = option.id === info.answer.correctAnswer;
+                    const isWrongAnswer = isAnswered && isSelected && !isCorrectAnswer;
+                    const shouldShowCorrect = isAnswered && isCorrectAnswer;
+
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => !isAnswered && setSelectedOption(option.id)}
+                        className={`${styles.optionButton} ${
+                          isSelected ? styles.selected : ''
+                        } ${shouldShowCorrect ? styles.correct : ''} ${
+                          isWrongAnswer ? styles.wrong : ''
+                        }`}
+                        disabled={isAnswered}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <>
+                <label htmlFor="answer" className={styles.inputLabel}>
+                  Your Answer
+                </label>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type="text"
+                    id="answer"
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    maxLength={info.answer.maxLength}
+                    placeholder="Type your answer here..."
+                    className={styles.answerInput}
+                    disabled={isSubmitting}
+                  />
+                  <span className={styles.charCount}>
+                    {userAnswer.length}/{info.answer.maxLength}
+                  </span>
+                </div>
+              </>
+            )}
 
             <div className={styles.formActions}>
               <button
@@ -209,7 +276,10 @@ export default function SolvePage({ params }) {
               <button
                 type="submit"
                 className={styles.submitButton}
-                disabled={isSubmitting || userAnswer.trim().length < info.answer.minLength}
+                disabled={
+                  isSubmitting ||
+                  (info.answer.type === 'multiple-choice' ? !selectedOption || isAnswered : userAnswer.trim().length < info.answer.minLength)
+                }
               >
                 {isSubmitting ? 'Checking...' : 'Submit Answer'}
               </button>

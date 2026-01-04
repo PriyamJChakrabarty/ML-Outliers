@@ -32,25 +32,19 @@ Hey, what do you think, can you do some operation on the target variable y to ma
 
   // Answer Configuration
   answer: {
-    // Expert answer for semantic comparison
-    expert: 'Use Log Transformation',
+    // Multiple choice mode
+    type: 'multiple-choice',
 
-    // Alternative acceptable answers (for exact matching)
-    alternatives: [
-      'log transformation',
-      'apply log transform',
-      'logarithmic transformation',
-      'use logarithm',
-      'take the log',
-      'log transform the target',
+    // Options
+    options: [
+      { id: 'quadratic', label: 'Quadratic' },
+      { id: 'inverse', label: 'Inverse' },
+      { id: 'logarithm', label: 'Logarithm' },
+      { id: 'normalisation', label: 'Normalisation' },
     ],
 
-    // Semantic similarity threshold (0-1)
-    similarityThreshold: 0.75,
-
-    // Input constraints
-    maxLength: 100,
-    minLength: 3,
+    // Correct answer ID
+    correctAnswer: 'logarithm',
   },
 
   // Feedback
