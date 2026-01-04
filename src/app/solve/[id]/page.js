@@ -318,9 +318,14 @@ export default function SolvePage({ params }) {
                 <p className={styles.feedbackHint}>{feedback.hint}</p>
               )}
 
-              {feedback.type === 'success' && (
+              {(feedback.type === 'success' || feedback.type === 'incorrect') && (
                 <div className={styles.successActions}>
-                  <Link href="/home" className={styles.continueButton}>
+                  <Link
+                    href="/home"
+                    className={`${styles.continueButton} ${
+                      feedback.type === 'incorrect' ? styles.continueButtonIncorrect : ''
+                    }`}
+                  >
                     Continue Learning
                   </Link>
                 </div>
