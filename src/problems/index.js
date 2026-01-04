@@ -17,6 +17,8 @@ import { info as droppingJunkInfo } from './LinearRegression/dropping-the-junk/i
 import DroppingJunkVisual from './LinearRegression/dropping-the-junk/Visual.jsx';
 import { info as categoricalFeaturesInfo } from './LinearRegression/categorical-features/info.js';
 import CategoricalFeaturesVisual from './LinearRegression/categorical-features/Visual.jsx';
+import { info as residualPlotInfo } from './LinearRegression/residual-plot/info.js';
+import ResidualPlotVisual from './LinearRegression/residual-plot/Visual.jsx';
 
 // Registry object: Maps problem slug to problem module
 const problemsRegistry = {
@@ -33,6 +35,11 @@ const problemsRegistry = {
   'categorical-features': {
     info: categoricalFeaturesInfo,
     Visual: CategoricalFeaturesVisual,
+  },
+
+  'residual-plot': {
+    info: residualPlotInfo,
+    Visual: ResidualPlotVisual,
   },
 
   // Add more problems here as you create them
