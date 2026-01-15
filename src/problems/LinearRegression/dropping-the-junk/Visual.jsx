@@ -67,7 +67,7 @@ export default function Visual({ problemInfo }) {
 
   const handleCompletion = () => {
     markComplete('dropping-the-junk');
-    router.push('/');
+    router.push('/module/LinearRegression');
   };
 
   // Feature selection handlers

@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useState, useEffect } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,6 +22,12 @@ export default function SolvePage({ params }) {
   const [showHint, setShowHint] = useState(false);
   const [hintIndex, setHintIndex] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [startTime, setStartTime] = useState(null);
+
+  // Initialize timer on mount
+  useEffect(() => {
+    setStartTime(Date.now());
+  }, []);
 
   // Handle case where problem doesn't exist
   if (!problem) {
@@ -77,6 +83,11 @@ export default function SolvePage({ params }) {
       setFeedback(null);
 
       try {
+        // Calculate submission time
+        const submissionTimeSeconds = startTime
+          ? Math.floor((Date.now() - startTime) / 1000)
+          : undefined;
+
         const response = await fetch('/api/check-answer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -85,6 +96,7 @@ export default function SolvePage({ params }) {
             userAnswer: userAnswer.trim(),
             expertAnswer: info.answer.expert,
             threshold: info.answer.similarityThreshold,
+            submissionTimeSeconds,
           }),
         });
 
@@ -127,23 +139,50 @@ export default function SolvePage({ params }) {
 
       setIsSubmitting(true);
       setIsAnswered(true);
+      setFeedback(null);
 
-      const isCorrect = selectedOption === info.answer.correctAnswer;
+      try {
+        // Calculate submission time
+        const submissionTimeSeconds = startTime
+          ? Math.floor((Date.now() - startTime) / 1000)
+          : undefined;
 
-      if (isCorrect) {
-        markComplete(id);
-        setFeedback({
-          type: 'success',
-          ...info.feedback.correct,
+        const response = await fetch('/api/check-answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            problemId: id,
+            userAnswer: selectedOption,
+            expertAnswer: info.answer.correctAnswer,
+            threshold: 0.75,
+            submissionTimeSeconds,
+          }),
         });
-      } else {
+
+        const result = await response.json();
+
+        if (result.isCorrect) {
+          markComplete(id);
+          setFeedback({
+            type: 'success',
+            ...info.feedback.correct,
+          });
+        } else {
+          setFeedback({
+            type: 'incorrect',
+            ...info.feedback.incorrect,
+          });
+        }
+      } catch (error) {
         setFeedback({
-          type: 'incorrect',
-          ...info.feedback.incorrect,
+          type: 'error',
+          title: 'Submission Error',
+          message: 'Failed to check your answer. Please try again.',
         });
+        console.error('Submission error:', error);
+      } finally {
+        setIsSubmitting(false);
       }
-
-      setIsSubmitting(false);
     }
   };
 

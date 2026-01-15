@@ -1,4 +1,6 @@
 import { pipeline, cos_sim } from '@xenova/transformers';
+import { auth } from '@clerk/nextjs/server';
+import { createSubmission } from '@/db/queries/submissions';
 
 /**
  * Semantic Answer Checker API
@@ -9,6 +11,8 @@ import { pipeline, cos_sim } from '@xenova/transformers';
  * SCALABILITY: Runs on-device, handles concurrent requests
  * MODULARITY: Independent answer checking service
  * DEPLOYABILITY: Works in serverless/edge environments
+ *
+ * UPDATED: Now persists submissions to database via Neon DB
  */
 
 // Cache the model pipeline (loaded once, reused for all requests)
@@ -73,6 +77,12 @@ function checkAnswer(userAnswer, expertAnswer, alternatives, threshold) {
 
 export async function POST(request) {
   try {
+    // Get authenticated user
+    const { userId } = await auth();
+    if (!userId) {
+      return Response.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
+    }
+
     const body = await request.json();
     const {
       problemId,
@@ -80,6 +90,7 @@ export async function POST(request) {
       expertAnswer,
       threshold = 0.75,
       alternatives = [],
+      submissionTimeSeconds, // NEW: time taken by user
     } = body;
 
     // Validation
@@ -104,33 +115,55 @@ export async function POST(request) {
     // First, try exact/alternative matching (fast)
     const quickCheck = checkAnswer(userAnswer, expertAnswer, alternatives, threshold);
 
+    let isCorrect = false;
+    let similarity = 0;
+    let method = '';
+
     if (quickCheck.isCorrect) {
-      return Response.json({
-        isCorrect: true,
-        similarity: quickCheck.similarity,
-        method: quickCheck.method,
-        problemId,
-      });
+      isCorrect = true;
+      similarity = quickCheck.similarity;
+      method = quickCheck.method;
+    } else {
+      // If no exact match, use semantic similarity (slower but accurate)
+      console.log(`[${problemId}] Performing semantic similarity check...`);
+
+      similarity = await calculateSimilarity(
+        userAnswer.toLowerCase().trim(),
+        expertAnswer.toLowerCase().trim()
+      );
+
+      console.log(`[${problemId}] Similarity: ${similarity.toFixed(3)} (threshold: ${threshold})`);
+
+      isCorrect = similarity >= threshold;
+      method = 'semantic';
     }
 
-    // If no exact match, use semantic similarity (slower but accurate)
-    console.log(`[${problemId}] Performing semantic similarity check...`);
+    // Calculate points
+    const basePoints = 100; // TODO: Get from problem.basePoints
+    const pointsAwarded = isCorrect ? basePoints : 0;
 
-    const similarity = await calculateSimilarity(
-      userAnswer.toLowerCase().trim(),
-      expertAnswer.toLowerCase().trim()
-    );
-
-    console.log(`[${problemId}] Similarity: ${similarity.toFixed(3)} (threshold: ${threshold})`);
-
-    const isCorrect = similarity >= threshold;
+    // Save submission to database
+    try {
+      await createSubmission({
+        userId,
+        problemSlug: problemId,
+        userAnswer,
+        isCorrect,
+        submissionTimeSeconds,
+        pointsAwarded,
+      });
+    } catch (dbError) {
+      console.error('Failed to save submission to database:', dbError);
+      // Continue anyway - don't fail the request if DB save fails
+    }
 
     return Response.json({
       isCorrect,
       similarity,
-      method: 'semantic',
+      method,
       problemId,
       threshold,
+      pointsAwarded,
     });
 
   } catch (error) {
