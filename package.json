@@ -7,18 +7,32 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx scripts/seed-problems.ts",
+    "db:sync-user": "tsx scripts/sync-current-user.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.5",
+    "@neondatabase/serverless": "^1.0.2",
     "@xenova/transformers": "^2.17.2",
+    "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.1",
     "next": "16.1.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "svix": "^1.84.1"
   },
   "devDependencies": {
+    "@types/react": "19.2.8",
     "babel-plugin-react-compiler": "1.0.0",
+    "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9",
-    "eslint-config-next": "16.1.1"
+    "eslint-config-next": "16.1.1",
+    "tsx": "^4.21.0"
   }
 }
