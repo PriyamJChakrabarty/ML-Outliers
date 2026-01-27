@@ -59,10 +59,16 @@ export async function POST(request: Request) {
           });
         }
 
-        // Update the username
+        // Update the username, set usernameUpdatedAt for cooldown tracking, and reset obscene attempts
+        const now = new Date();
         await db
           .update(users)
-          .set({ username: providedUsername, updatedAt: new Date() })
+          .set({
+            username: providedUsername,
+            usernameUpdatedAt: now,
+            updatedAt: now,
+            obsceneAttempts: 0, // Reset obscene attempts on successful username change
+          })
           .where(eq(users.clerkId, clerkId));
 
         console.log(`[SYNC-USER] Username set for user: ${providedUsername}`);
@@ -94,6 +100,7 @@ export async function POST(request: Request) {
         user: {
           username: existingUser[0].username,
           email: existingUser[0].email,
+          usernameUpdatedAt: existingUser[0].usernameUpdatedAt,
         },
       });
     }
@@ -128,6 +135,7 @@ export async function POST(request: Request) {
     }
 
     // Insert new user into database
+    // Set usernameUpdatedAt if username is provided (starts the 1-month cooldown)
     await db.insert(users).values({
       clerkId: clerkUser.id,
       email: clerkUser.emailAddresses[0]?.emailAddress || '',
@@ -137,6 +145,7 @@ export async function POST(request: Request) {
       totalPoints: 0,
       currentStreak: 0,
       longestStreak: 0,
+      usernameUpdatedAt: usernameToUse ? new Date() : null,
     });
 
     console.log(`[SYNC-USER] New user registered: ${usernameToUse || clerkUser.emailAddresses[0]?.emailAddress}`);

@@ -2,9 +2,6 @@
 const nextConfig = {
   reactCompiler: true,
 
-  // Allow external packages for server components
-  serverExternalPackages: ['@xenova/transformers'],
-
   // Allow Clerk avatar images
   images: {
     remotePatterns: [

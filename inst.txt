@@ -1,16 +1,78 @@
-listen I want two
-  features to be
-  implemented here
 
-  1. I want a leaderboard -  
-  and that should show       
-  actual accounts - the      
-  rule  - the person who has completed more problems and faster
+Section 1
 
-  2. On clicking I should be able to see the profiles!! - Which would be basically same as the home page (not the landing page) without the modules section
+The overall roadmap goes as follows - Initially you must learn the basics of python language followed by the important libraries of Numpy, Pandas, Matplotlib, Seaborn
 
-For doing this I would like to implement an approach that would look good on my resume for the sde placements -
 
-I want to use sql with posgresql using neon db
 
-Make sure that u follow the principles of SCALABILITY, SYSTEM DESIGN AND DEPLOYABILITY!!!
+NumPy and Pandas handle the data cleaning and preprocessing, Matplotlib and Seaborn are the standard tools for visualisation.
+
+
+
+Then we can move on to traditional ML Algorithms in sequence Linear Regression, Logistic Regression, Naive Bayes, SVM, Decision Trees, Ensemble Models like Random Forest & XGBoost.
+
+
+Then we can move on to Deep Learning & Neural Networks concepts like Perceptron & ANN, CNN, RNN, LSTM, GRU, Transfomers etc
+
+This prepares a strong foundation for you to explore the amazing world of AI/ML with projects!
+
+
+Section 2
+
+
+Various resources have been added and more will be added, but one of the best and structured resource is the 100 Days of Machine Learning and Deep learning by Campus X.
+
+While the sheer size can be daunting, it is important to view it section wise and keep regular targets and complete them accordingly.
+
+Below is the progress tracker along with other important resources!
+
+
+
+-------------------------------------------------------
+
+
+1. In Log Transform - 
+
+add the continue button in the wrong answer card also
+
+replace the final hurray page with the standard hurray page -
+
+Hurray! 🎉
+You have finished the exercise!
+
+Return to Linear Regression Module →
+
+ensure correct routing and saving animation
+
+2. In the dropping the junk
+
+
+💡 You will see that it is difficult to see the data and find out features which are not necessary, thus we will rely on math! Scroll down to find out ⬇️
+
+Also add - You can use the button below to see the visualisation of the correlation, or do the maths yourself!
+
+
+3. In Categorical Features
+
+
+🧠 Use your common sense, and observe the data carefully, you can just see it without using maths! 👀 - add Only focus on Cuisine and Critic Review!
+
+
+
+
+4. In residual plots
+
+page 9
+
+when wrong answer is checked, glow the option selected as red and the right one as green and have a continue button
+
+
+TAKE CARE OF EXTREME BEAUTIFICATION OF TEXT USING COLOURS, STYLISING AND FONT!
+
+MAKE SURE THAT ALL OF THESE ARE DONE!
+
+Also add overall loading animations in home page, inside modules and in leaderboard so that users know
+
+Also in the stats in home page - the total points should be pulled dynamically!
+
+ 

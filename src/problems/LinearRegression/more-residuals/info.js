@@ -16,7 +16,7 @@ export const info = {
 
   // Multi-page configuration
   multiPage: true,
-  totalPages: 10,
+  totalPages: 11,
 
   // Page-specific content
   pages: [
@@ -155,8 +155,8 @@ I hope you remember how to do it!`,
       type: 'multi-select-quiz',
       prompt: {
         heading: 'Jake Sully\'s Farm',
-        body: `Jake Sully is now living a peaceful life after the 2nd Pandorian War. He has now become a farmer. His son Lo'ak has collected data related to previous crop yields. Jake wants to find out if some features interact and determine crop yield together? He has created several Residual Interaction Plots. Observe and flag the possible interactions`,
-        remark: 'See if the color coding is not random, but instead kind of divides the cloud in groups or follow some distinct patterns'
+        body: `Jake Sully is now living a peaceful life after the 2nd Pandorian War. He has now become a farmer. His son Lo'ak has collected data related to previous crop yields. Jake wants to find out if some features interact and determine crop yield together? He has created several Residual Interaction Plots. Observe and flag the possible interactions (We are not concerned if the residual plots show any pattern like parabolic profile etc, we are more concerned if the colours form distinct groups or appear together - indicating interaction)`,
+        remark: 'See if the color coding is not random, but instead kind of divides the cloud in groups or follow some distinct patterns (the color follows a pattern - not the overall graph)'
       },
       options: [
         { label: 'Soil pH - Nitrogen Levels', value: 'option1', image: '/assets/LinearRegression/MoreResiduals/plot1.png' },
@@ -171,13 +171,24 @@ I hope you remember how to do it!`,
     // Page 10: Solution - Adding interaction term
     {
       pageNumber: 10,
-      type: 'completion',
+      type: 'summary-with-equation',
       prompt: {
-        heading: 'Hurray! 🎉',
+        heading: 'Adding Interaction Terms',
         body: `Once you have flagged the interactions between variables like X1 and X2, the next step is to incorporate their joint influence into your model.
 
 You simply add a new "Interaction Term" (X1 * X2) into your hypothesis.`,
         equation: 'y = β₀ + β₁(X1) + β₂(X2) + β₃(X1 × X2) + ε'
+      },
+      hasNextButton: true,
+    },
+
+    // Page 11: Completion/Hurray Page
+    {
+      pageNumber: 11,
+      type: 'completion',
+      prompt: {
+        heading: 'Hurray! 🎉',
+        body: 'You have finished the exercise!',
       },
     },
   ],

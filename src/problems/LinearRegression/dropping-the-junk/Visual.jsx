@@ -65,8 +65,24 @@ export default function Visual({ problemInfo }) {
     }
   };
 
-  const handleCompletion = () => {
+  const handleCompletion = async () => {
+    // Mark the problem as complete regardless of answer correctness
+    try {
+      await fetch('/api/mark-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ problemSlug: 'dropping-the-junk' }),
+      });
+    } catch (error) {
+      console.error('Error marking problem complete:', error);
+    }
+
+    // Update localStorage (legacy) and dispatch event
     markComplete('dropping-the-junk');
+    window.dispatchEvent(new CustomEvent('completion-updated', {
+      detail: { problemSlug: 'dropping-the-junk' }
+    }));
+
     router.push('/module/LinearRegression');
   };
 
@@ -258,6 +274,26 @@ function MultipleChoicePage({
         <p style={{ fontSize: '1.3rem', fontWeight: 600, color: '#2d3748', marginTop: '2rem' }}>
           Which of the following features do you think are worthy of dropping?
         </p>
+        <p style={{
+          fontSize: '1.1rem',
+          lineHeight: '1.8',
+          color: '#4a5568',
+          marginTop: '1rem',
+          fontStyle: 'italic',
+          padding: '1rem 1.5rem',
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%)',
+          borderRadius: '12px',
+          border: '1px solid rgba(102, 126, 234, 0.2)',
+        }}>
+          (We are not concerned with features that are similar, but more with{' '}
+          <strong style={{
+            background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 800,
+            fontSize: '1.15rem',
+          }}>Features that do not have much influence on the No. of Days Survived (the target variable)</strong>)
+        </p>
       </div>
 
       <div className={styles.featureGrid}>
@@ -284,7 +320,7 @@ function MultipleChoicePage({
           Check Answer
         </button>
         <button onClick={handleSeeAnswer} className={styles.seeAnswerButton}>
-          See Answer
+          See the Solution!
         </button>
       </div>
 
@@ -496,6 +532,33 @@ function DataAnalysisPage({
         <p style={{ fontSize: '1.2rem', lineHeight: '1.9', color: '#2d3748' }}>
           But here's the thing: not all of this matters. Some features are just <em style={{ fontStyle: 'italic', color: '#ef4444' }}>noise</em>. <strong style={{ color: '#667eea', fontWeight: 700, fontSize: '1.3rem' }}>Find the features that are unnecessary!</strong>
         </p>
+        <div style={{
+          marginTop: '1.5rem',
+          padding: '1.25rem 2rem',
+          background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.15) 100%)',
+          borderRadius: '12px',
+          border: '2px solid rgba(245, 158, 11, 0.3)',
+          boxShadow: '0 4px 15px rgba(245, 158, 11, 0.1)',
+        }}>
+          <p style={{
+            fontSize: '1.1rem',
+            lineHeight: '1.8',
+            color: '#92400e',
+            fontStyle: 'italic',
+            textAlign: 'center',
+            margin: 0,
+          }}>
+            💡 <span style={{ fontWeight: 600 }}>You will see that it is difficult to see the data and find out features which are not necessary, thus we will rely on</span>{' '}
+            <strong style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 800,
+              fontSize: '1.2rem',
+            }}>math!</strong>{' '}
+            <span style={{ fontWeight: 600 }}>Scroll down to find out</span> ⬇️
+          </p>
+        </div>
       </div>
 
       <div className={styles.tableContainer}>
@@ -527,6 +590,35 @@ function DataAnalysisPage({
       <div className={styles.majorQuote}>
         <p className={styles.majorQuoteText}>
           "Calculate correlation of all features with the Target variable"
+        </p>
+      </div>
+      <div style={{
+        marginTop: '1.5rem',
+        padding: '1rem 2rem',
+        background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.12) 100%)',
+        borderRadius: '12px',
+        border: '1px dashed rgba(102, 126, 234, 0.4)',
+        textAlign: 'center',
+      }}>
+        <p style={{
+          fontSize: '1.1rem',
+          lineHeight: '1.8',
+          color: '#4a5568',
+          fontStyle: 'italic',
+          margin: 0,
+        }}>
+          🎯 <span style={{ fontWeight: 500 }}>You can use the</span>{' '}
+          <strong style={{
+            color: '#10b981',
+            fontWeight: 700,
+          }}>button below</strong>{' '}
+          <span style={{ fontWeight: 500 }}>to see the visualisation of the correlation, or</span>{' '}
+          <strong style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 700,
+          }}>do the maths yourself!</strong>
         </p>
       </div>
 
@@ -593,7 +685,24 @@ function DataAnalysisPage({
             </h2>
             <div className={styles.promptBody}>
               <p style={{ fontSize: '1.2rem', lineHeight: '1.9', color: '#2d3748' }}>
-                Based on the <strong style={{ color: '#667eea', fontWeight: 700 }}>correlation values</strong> you just saw, identify the features that should be dropped.
+                Based on the <strong style={{ color: '#667eea', fontWeight: 700 }}>correlation values</strong> you just saw, identify the features that should be dropped.{' '}
+                <span style={{
+                  display: 'inline-block',
+                  marginTop: '0.5rem',
+                  padding: '0.4rem 0.8rem',
+                  background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%)',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  fontStyle: 'italic',
+                  fontSize: '1rem',
+                }}>
+                  ⚡ <strong style={{
+                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    fontWeight: 700,
+                  }}>Select only the most redundant ones!</strong>
+                </span>
               </p>
             </div>
 
@@ -619,7 +728,7 @@ function DataAnalysisPage({
                 Check Answer
               </button>
               <button onClick={handleSeeAnswer} className={styles.seeAnswerButton}>
-                See Answer
+                See the Solution!
               </button>
             </div>
 
@@ -699,17 +808,121 @@ function DataAnalysisPage({
   );
 }
 
-// Page 5: Completion
+// Page 5: Completion - UNIFORM STANDARD
 function CompletionPage({ data, handleCompletion }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onComplete = async () => {
+    setIsLoading(true);
+    await handleCompletion();
+  };
+
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    const parts = text.split('**');
+    return parts.map((part, idx) => {
+      if (idx % 2 === 1) {
+        return <strong key={idx} style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 700,
+          fontSize: '1.35rem',
+        }}>{part}</strong>;
+      }
+      return part;
+    });
+  };
+
   return (
-    <div className={styles.completionPage}>
-      <div className={styles.completionContent}>
-        <h1 className={styles.completionHeading}>{data.prompt.heading}</h1>
-        <p className={styles.completionMessage}>{data.prompt.body}</p>
-        <button onClick={handleCompletion} className={styles.returnButton}>
-          Return to Modules
-        </button>
+    <div style={{
+      maxWidth: '900px',
+      margin: '0 auto',
+      padding: '2rem',
+      textAlign: 'center',
+    }}>
+      <h1 style={{
+        fontSize: '3rem',
+        fontWeight: 800,
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginBottom: '2.5rem',
+        letterSpacing: '-0.02em',
+      }}>
+        {data.prompt.heading}
+      </h1>
+
+      <div style={{
+        maxWidth: '750px',
+        margin: '0 auto 3rem auto',
+      }}>
+        {data.prompt.body.split('\n\n').map((para, idx) => (
+          <p key={idx} style={{
+            fontSize: '1.3rem',
+            lineHeight: '1.9',
+            color: '#2d3748',
+            marginBottom: '1.5rem',
+          }}>
+            {renderFormattedText(para)}
+          </p>
+        ))}
       </div>
+
+      <button
+        onClick={onComplete}
+        disabled={isLoading}
+        style={{
+          padding: '1.2rem 3rem',
+          fontSize: '1.2rem',
+          fontWeight: 700,
+          color: 'white',
+          background: isLoading
+            ? 'linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%)'
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: isLoading ? 'wait' : 'pointer',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.75rem',
+          minWidth: '320px',
+          margin: '0 auto',
+        }}
+        onMouseEnter={(e) => {
+          if (!isLoading) {
+            e.target.style.transform = 'translateY(-3px)';
+            e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'translateY(0)';
+          e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+        }}
+      >
+        {isLoading && (
+          <span style={{
+            width: '20px',
+            height: '20px',
+            border: '3px solid rgba(255,255,255,0.3)',
+            borderTop: '3px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }} />
+        )}
+        {isLoading ? 'Saving Progress...' : 'Return to Linear Regression Module →'}
+      </button>
+      {isLoading && (
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      )}
     </div>
   );
 }

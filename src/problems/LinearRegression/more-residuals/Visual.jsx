@@ -37,8 +37,24 @@ export default function Visual({ problemInfo }) {
     }
   };
 
-  const handleCompletion = () => {
+  const handleCompletion = async () => {
+    // Mark the problem as complete regardless of answer correctness
+    try {
+      await fetch('/api/mark-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ problemSlug: 'more-residuals' }),
+      });
+    } catch (error) {
+      console.error('Error marking problem complete:', error);
+    }
+
+    // Update localStorage (legacy) and dispatch event
     markComplete('more-residuals');
+    window.dispatchEvent(new CustomEvent('completion-updated', {
+      detail: { problemSlug: 'more-residuals' }
+    }));
+
     router.push('/module/LinearRegression');
   };
 
@@ -76,6 +92,9 @@ export default function Visual({ problemInfo }) {
             goToNextPage={goToNextPage}
           />
         );
+
+      case 'summary-with-equation':
+        return <SummaryWithEquationPage data={currentPageData} />;
 
       case 'completion':
         return <CompletionPage data={currentPageData} handleCompletion={handleCompletion} />;
@@ -526,10 +545,47 @@ function MultiSelectQuizPage({ data, selectedOptions, setSelectedOptions, showFe
         color: '#2d3748',
         textAlign: 'center',
         maxWidth: '800px',
-        margin: '0 auto 2rem auto'
+        margin: '0 auto 1.5rem auto'
       }}>
-        {data.prompt.body}
+        Jake Sully is now living a peaceful life after the 2nd Pandorian War. He has now become a farmer. His son Lo'ak has collected data related to previous crop yields. Jake wants to find out if some features interact and determine crop yield together? He has created several Residual Interaction Plots. <strong style={{ color: '#667eea', fontWeight: 700 }}>Observe and flag the possible interactions</strong>
       </p>
+
+      {/* Beautified bracket text */}
+      <div style={{
+        padding: '1.25rem 2rem',
+        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.15) 100%)',
+        borderRadius: '12px',
+        border: '2px solid rgba(139, 92, 246, 0.3)',
+        boxShadow: '0 4px 15px rgba(139, 92, 246, 0.1)',
+        maxWidth: '800px',
+        margin: '0 auto 2rem auto',
+      }}>
+        <p style={{
+          fontSize: '1.1rem',
+          lineHeight: '1.8',
+          color: '#5b21b6',
+          fontStyle: 'italic',
+          textAlign: 'center',
+          margin: 0,
+        }}>
+          🔍 <span style={{ fontWeight: 500 }}>We are not concerned if the residual plots show any pattern like parabolic profile etc, we are more concerned if the</span>{' '}
+          <strong style={{
+            background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 800,
+            fontSize: '1.15rem',
+          }}>colours form distinct groups or appear together</strong>{' '}
+          <span style={{ fontWeight: 500 }}>— indicating</span>{' '}
+          <strong style={{
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 800,
+            fontSize: '1.15rem',
+          }}>interaction</strong>
+        </p>
+      </div>
 
       {/* Options Grid */}
       <div className={styles.quizOptionsGrid}>
@@ -618,51 +674,72 @@ function MultiSelectQuizPage({ data, selectedOptions, setSelectedOptions, showFe
   );
 }
 
-// Page 10: Completion
-function CompletionPage({ data, handleCompletion }) {
-  return (
-    <div className={styles.completionPage}>
-      <div className={styles.completionContent}>
-        <h1 style={{
-          fontSize: '3rem',
-          fontWeight: 800,
-          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+// Page 10: Summary with Equation
+function SummaryWithEquationPage({ data }) {
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    const parts = text.split('**');
+    return parts.map((part, idx) => {
+      if (idx % 2 === 1) {
+        return <strong key={idx} style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          textAlign: 'center',
-          marginBottom: '2rem'
-        }}>
-          {data.prompt.heading}
-        </h1>
+          fontWeight: 700,
+          fontSize: '1.35rem',
+        }}>{part}</strong>;
+      }
+      return part;
+    });
+  };
 
-        <div style={{
-          maxWidth: '750px',
-          margin: '0 auto 3rem auto'
-        }}>
-          {data.prompt.body.split('\n\n').map((para, idx) => (
-            <p key={idx} style={{
-              fontSize: '1.3rem',
-              lineHeight: '1.9',
-              color: '#2d3748',
-              textAlign: 'center',
-              marginBottom: '1.5rem'
-            }}>
-              {para.includes('Interaction Term') ? (
-                <>
-                  You simply add a new <span style={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    fontWeight: 700,
-                    fontSize: '1.4rem'
-                  }}>"Interaction Term" (X1 * X2)</span> into your hypothesis.
-                </>
-              ) : para}
-            </p>
-          ))}
-        </div>
+  return (
+    <div style={{
+      maxWidth: '900px',
+      margin: '0 auto',
+      padding: '2rem',
+      textAlign: 'center',
+    }}>
+      <h2 style={{
+        fontSize: '2.5rem',
+        fontWeight: 700,
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginBottom: '2.5rem',
+        letterSpacing: '-0.02em',
+      }}>
+        {data.prompt.heading}
+      </h2>
 
-        {/* Beautified Equation */}
+      <div style={{
+        maxWidth: '750px',
+        margin: '0 auto 3rem auto',
+      }}>
+        {data.prompt.body.split('\n\n').map((para, idx) => (
+          <p key={idx} style={{
+            fontSize: '1.3rem',
+            lineHeight: '1.9',
+            color: '#2d3748',
+            marginBottom: '1.5rem',
+          }}>
+            {para.includes('Interaction Term') ? (
+              <>
+                You simply add a new <span style={{
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontWeight: 700,
+                  fontSize: '1.4rem'
+                }}>"Interaction Term" (X1 * X2)</span> into your hypothesis.
+              </>
+            ) : renderFormattedText(para)}
+          </p>
+        ))}
+      </div>
+
+      {/* Beautified Equation */}
+      {data.prompt.equation && (
         <div style={{
           padding: '3rem',
           background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
@@ -684,11 +761,161 @@ function CompletionPage({ data, handleCompletion }) {
             {data.prompt.equation}
           </p>
         </div>
+      )}
+    </div>
+  );
+}
 
-        <button onClick={handleCompletion} className={styles.returnButton}>
-          Return to Linear Regression Module
-        </button>
+// Page 11: Completion - UNIFORM STANDARD
+function CompletionPage({ data, handleCompletion }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onComplete = async () => {
+    setIsLoading(true);
+    await handleCompletion();
+  };
+
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    const parts = text.split('**');
+    return parts.map((part, idx) => {
+      if (idx % 2 === 1) {
+        return <strong key={idx} style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 700,
+          fontSize: '1.35rem',
+        }}>{part}</strong>;
+      }
+      return part;
+    });
+  };
+
+  return (
+    <div style={{
+      maxWidth: '900px',
+      margin: '0 auto',
+      padding: '2rem',
+      textAlign: 'center',
+    }}>
+      <h1 style={{
+        fontSize: '3rem',
+        fontWeight: 800,
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginBottom: '2.5rem',
+        letterSpacing: '-0.02em',
+      }}>
+        {data.prompt.heading}
+      </h1>
+
+      <div style={{
+        maxWidth: '750px',
+        margin: '0 auto 3rem auto',
+      }}>
+        {data.prompt.body.split('\n\n').map((para, idx) => (
+          <p key={idx} style={{
+            fontSize: '1.3rem',
+            lineHeight: '1.9',
+            color: '#2d3748',
+            marginBottom: '1.5rem',
+          }}>
+            {para.includes('Interaction Term') ? (
+              <>
+                You simply add a new <span style={{
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontWeight: 700,
+                  fontSize: '1.4rem'
+                }}>"Interaction Term" (X1 * X2)</span> into your hypothesis.
+              </>
+            ) : renderFormattedText(para)}
+          </p>
+        ))}
       </div>
+
+      {/* Beautified Equation */}
+      {data.prompt.equation && (
+        <div style={{
+          padding: '3rem',
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+          borderRadius: '16px',
+          boxShadow: '0 10px 40px rgba(102, 126, 234, 0.2)',
+          marginBottom: '3rem',
+          border: '3px solid #667eea'
+        }}>
+          <p style={{
+            fontSize: '2.5rem',
+            fontWeight: 800,
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textAlign: 'center',
+            fontFamily: 'Georgia, serif',
+            letterSpacing: '0.05em'
+          }}>
+            {data.prompt.equation}
+          </p>
+        </div>
+      )}
+
+      <button
+        onClick={onComplete}
+        disabled={isLoading}
+        style={{
+          padding: '1.2rem 3rem',
+          fontSize: '1.2rem',
+          fontWeight: 700,
+          color: 'white',
+          background: isLoading
+            ? 'linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%)'
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: isLoading ? 'wait' : 'pointer',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.75rem',
+          minWidth: '320px',
+          margin: '0 auto',
+        }}
+        onMouseEnter={(e) => {
+          if (!isLoading) {
+            e.target.style.transform = 'translateY(-3px)';
+            e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'translateY(0)';
+          e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+        }}
+      >
+        {isLoading && (
+          <span style={{
+            width: '20px',
+            height: '20px',
+            border: '3px solid rgba(255,255,255,0.3)',
+            borderTop: '3px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }} />
+        )}
+        {isLoading ? 'Saving Progress...' : 'Return to Linear Regression Module →'}
+      </button>
+      {isLoading && (
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      )}
     </div>
   );
 }

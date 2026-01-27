@@ -16,7 +16,7 @@ export const info = {
 
   // Multi-page configuration
   multiPage: true,
-  totalPages: 15,
+  totalPages: 17,
 
   // Page-specific content
   pages: [
@@ -107,9 +107,47 @@ We can divide correlation as positive or negative based on whether the residuals
       hasNextButton: true,
     },
 
-    // Page 5: Question - Identify Positive Autocorrelation
+    // Page 5: Positive Autocorrelation (NEW)
     {
       pageNumber: 5,
+      type: 'explanation-with-image',
+      prompt: {
+        heading: 'Positive Autocorrelation',
+        body: `Positive autocorrelation means that values close to each other in time tend to be similar.
+
+If the value is high now, it is likely to be high in the next period or if low, then low in the next period.
+
+In a chart, this looks like "persistence" or long trends (either upward or downward). The data points "follow" each other.`,
+      },
+      image: {
+        path: '/assets/LinearRegression/TimeSeries/poscorrimag.png',
+        alt: 'Positive Autocorrelation Pattern',
+      },
+      hasNextButton: true,
+    },
+
+    // Page 6: Negative Autocorrelation (NEW)
+    {
+      pageNumber: 6,
+      type: 'explanation-with-image',
+      prompt: {
+        heading: 'Negative Autocorrelation',
+        body: `Negative autocorrelation is a systematic reversal.
+
+If a value is high, the next one is likely to be low.
+
+Data constantly crosses the mean.`,
+      },
+      image: {
+        path: '/assets/LinearRegression/TimeSeries/negcorrimag.png',
+        alt: 'Negative Autocorrelation Pattern',
+      },
+      hasNextButton: true,
+    },
+
+    // Page 7: Question - Identify Positive Autocorrelation
+    {
+      pageNumber: 7,
       type: 'single-choice-question',
       prompt: {
         heading: 'Identify the Pattern',
@@ -138,9 +176,9 @@ We can divide correlation as positive or negative based on whether the residuals
       },
     },
 
-    // Page 6: Question - Identify Negative Autocorrelation
+    // Page 8: Question - Identify Negative Autocorrelation
     {
-      pageNumber: 6,
+      pageNumber: 8,
       type: 'single-choice-question',
       prompt: {
         heading: 'Identify the Pattern',
@@ -169,9 +207,9 @@ We can divide correlation as positive or negative based on whether the residuals
       },
     },
 
-    // Page 7: Lag Plots Introduction
+    // Page 9: Lag Plots Introduction
     {
-      pageNumber: 7,
+      pageNumber: 9,
       type: 'lag-plots-intro',
       prompt: {
         heading: 'Lag Plots',
@@ -191,15 +229,15 @@ Plot the corresponding Yi-k in x axis and the corresponding Yi in y axis`,
       hasNextButton: true,
     },
 
-    // Page 8: MCQ - Ordering Correlation Strength
+    // Page 10: MCQ - Ordering Correlation Strength
     {
-      pageNumber: 8,
+      pageNumber: 10,
       type: 'correlation-ordering-question',
       prompt: {
         heading: 'Understanding Correlation Strength',
         body: `Remember that for autocorrelation to occur et should follow some kind of trend with respect to et-1
 
-Observe the below and tell in which order the strength of correlation increases`,
+Observe the below and tell in which order the strength of correlation increases (Remember in lag plots, for autocorrelation look for points showing a uniform trend throughout — random points clustered or oscillating around the central horizontal line would not be considered to show autocorrelation)`,
       },
       images: [
         {
@@ -244,9 +282,9 @@ Observe the below and tell in which order the strength of correlation increases`
       },
     },
 
-    // Page 9: MCQ - Identify Positive/Negative Autocorrelation (Lag Plot)
+    // Page 11: MCQ - Identify Positive/Negative Autocorrelation (Lag Plot)
     {
-      pageNumber: 9,
+      pageNumber: 11,
       type: 'single-choice-question',
       prompt: {
         heading: 'Identify the Pattern',
@@ -275,9 +313,9 @@ Observe the below and tell in which order the strength of correlation increases`
       },
     },
 
-    // Page 10: Thinking About Solutions
+    // Page 12: Thinking About Solutions
     {
-      pageNumber: 10,
+      pageNumber: 12,
       type: 'thinking-page',
       prompt: {
         heading: 'How to Make Regression Fit Better?',
@@ -287,9 +325,9 @@ Observe the below and tell in which order the strength of correlation increases`
       hasNextButton: true,
     },
 
-    // Page 11: Equation with Lagged Variable
+    // Page 13: Equation with Lagged Variable
     {
-      pageNumber: 11,
+      pageNumber: 13,
       type: 'equation-page',
       prompt: {
         heading: 'Using Lagged Variables',
@@ -302,9 +340,9 @@ Observe the below and tell in which order the strength of correlation increases`
       hasNextButton: true,
     },
 
-    // Page 12: Predict the Change
+    // Page 14: Predict the Change
     {
-      pageNumber: 12,
+      pageNumber: 14,
       type: 'predict-change-page',
       prompt: {
         heading: 'Predict the Change!!',
@@ -320,9 +358,9 @@ Simplifying it a lot!`,
       hasNextButton: true,
     },
 
-    // Page 13: MCQ - Drawbacks
+    // Page 15: MCQ - Drawbacks
     {
-      pageNumber: 13,
+      pageNumber: 15,
       type: 'single-choice-question',
       prompt: {
         heading: 'Understanding the Drawbacks',
@@ -351,9 +389,9 @@ Can you identify what is the biggest drawback here`,
       },
     },
 
-    // Page 14: Summary
+    // Page 16: Summary
     {
-      pageNumber: 14,
+      pageNumber: 16,
       type: 'summary',
       prompt: {
         heading: 'Key Takeaways',
@@ -372,17 +410,13 @@ Can you identify what is the biggest drawback here`,
       hasNextButton: true,
     },
 
-    // Page 15: Completion
+    // Page 17: Completion
     {
-      pageNumber: 15,
+      pageNumber: 17,
       type: 'completion',
       prompt: {
-        heading: 'Hurray! You\'ve Mastered Autocorrelation! 🎉',
-        body: `You've successfully learned how to identify autocorrelation patterns in time series residual plots!
-
-This skill is crucial for building reliable forecasting models. By recognizing autocorrelation, you can identify when your time series model needs adjustments to handle sequential dependencies.
-
-Remember: **Independent errors are random. Autocorrelated errors follow patterns!**`,
+        heading: 'Hurray! 🎉',
+        body: 'You have finished the exercise!',
       },
     },
   ],

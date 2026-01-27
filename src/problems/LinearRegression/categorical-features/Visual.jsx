@@ -70,8 +70,24 @@ export default function Visual({ problemInfo }) {
     }
   };
 
-  const handleCompletion = () => {
+  const handleCompletion = async () => {
+    // Mark the problem as complete regardless of answer correctness
+    try {
+      await fetch('/api/mark-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ problemSlug: 'categorical-features' }),
+      });
+    } catch (error) {
+      console.error('Error marking problem complete:', error);
+    }
+
+    // Update localStorage (legacy) and dispatch event
     markComplete('categorical-features');
+    window.dispatchEvent(new CustomEvent('completion-updated', {
+      detail: { problemSlug: 'categorical-features' }
+    }));
+
     router.push('/module/LinearRegression');
   };
 
@@ -325,6 +341,60 @@ function DataWithQuestionPage({ data, csvData, selectedOption, setSelectedOption
         <p style={{ fontSize: '1.25rem', lineHeight: '1.9', color: '#2d3748', fontWeight: 500 }}>
           A restaurant chain is trying to figure out what drives chef salaries. They've got data on <strong style={{ color: '#667eea', fontWeight: 700 }}>years of experience</strong>, <strong style={{ color: '#667eea', fontWeight: 700 }}>critic reviews</strong>, <strong style={{ color: '#667eea', fontWeight: 700 }}>cuisine specialization</strong>, and what each chef actually earns.
         </p>
+        <div style={{
+          marginTop: '1.25rem',
+          padding: '1rem 1.5rem',
+          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%)',
+          borderRadius: '12px',
+          border: '2px solid rgba(16, 185, 129, 0.3)',
+          boxShadow: '0 4px 15px rgba(16, 185, 129, 0.1)',
+        }}>
+          <p style={{
+            fontSize: '1.1rem',
+            lineHeight: '1.8',
+            color: '#065f46',
+            fontStyle: 'italic',
+            textAlign: 'center',
+            margin: 0,
+          }}>
+            🧠 <span style={{ fontWeight: 600 }}>Use your</span>{' '}
+            <strong style={{
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 800,
+              fontSize: '1.15rem',
+            }}>common sense</strong>, <span style={{ fontWeight: 600 }}>and observe the data carefully, you can just see it</span>{' '}
+            <strong style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 800,
+              fontSize: '1.15rem',
+            }}>without using maths!</strong> 👀
+          </p>
+          <p style={{
+            fontSize: '1.05rem',
+            lineHeight: '1.7',
+            color: '#047857',
+            fontWeight: 700,
+            textAlign: 'center',
+            marginTop: '0.75rem',
+            marginBottom: 0,
+          }}>
+            Only focus on <span style={{
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 800,
+            }}>Cuisine</span> and <span style={{
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 800,
+            }}>Critic Review</span>!
+          </p>
+        </div>
       </div>
 
       {/* Data Table with emojis */}
@@ -746,17 +816,121 @@ function YesNoPage({ data, selectedAnswer, setSelectedAnswer, showFeedback, setS
   );
 }
 
-// Page 10: Completion
+// Page 10: Completion - UNIFORM STANDARD
 function CompletionPage({ data, handleCompletion }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onComplete = async () => {
+    setIsLoading(true);
+    await handleCompletion();
+  };
+
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    const parts = text.split('**');
+    return parts.map((part, idx) => {
+      if (idx % 2 === 1) {
+        return <strong key={idx} style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 700,
+          fontSize: '1.35rem',
+        }}>{part}</strong>;
+      }
+      return part;
+    });
+  };
+
   return (
-    <div className={styles.completionPage}>
-      <div className={styles.completionContent}>
-        <h1 className={styles.completionHeading}>{data.prompt.heading}</h1>
-        <p className={styles.completionMessage}>{data.prompt.body}</p>
-        <button onClick={handleCompletion} className={styles.returnButton}>
-          Return to Modules
-        </button>
+    <div style={{
+      maxWidth: '900px',
+      margin: '0 auto',
+      padding: '2rem',
+      textAlign: 'center',
+    }}>
+      <h1 style={{
+        fontSize: '3rem',
+        fontWeight: 800,
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginBottom: '2.5rem',
+        letterSpacing: '-0.02em',
+      }}>
+        {data.prompt.heading}
+      </h1>
+
+      <div style={{
+        maxWidth: '750px',
+        margin: '0 auto 3rem auto',
+      }}>
+        {data.prompt.body.split('\n\n').map((para, idx) => (
+          <p key={idx} style={{
+            fontSize: '1.3rem',
+            lineHeight: '1.9',
+            color: '#2d3748',
+            marginBottom: '1.5rem',
+          }}>
+            {renderFormattedText(para)}
+          </p>
+        ))}
       </div>
+
+      <button
+        onClick={onComplete}
+        disabled={isLoading}
+        style={{
+          padding: '1.2rem 3rem',
+          fontSize: '1.2rem',
+          fontWeight: 700,
+          color: 'white',
+          background: isLoading
+            ? 'linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%)'
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: isLoading ? 'wait' : 'pointer',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.75rem',
+          minWidth: '320px',
+          margin: '0 auto',
+        }}
+        onMouseEnter={(e) => {
+          if (!isLoading) {
+            e.target.style.transform = 'translateY(-3px)';
+            e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'translateY(0)';
+          e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+        }}
+      >
+        {isLoading && (
+          <span style={{
+            width: '20px',
+            height: '20px',
+            border: '3px solid rgba(255,255,255,0.3)',
+            borderTop: '3px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }} />
+        )}
+        {isLoading ? 'Saving Progress...' : 'Return to Linear Regression Module →'}
+      </button>
+      {isLoading && (
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      )}
     </div>
   );
 }

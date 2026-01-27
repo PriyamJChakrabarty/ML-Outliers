@@ -45,7 +45,7 @@ So how do you figure out if they actually matter?`,
         heading: 'A Real-World Example',
         body: `Consider the below:
 
-A restaurant chain is trying to figure out what drives chef salaries. They've got data on years of experience, critic reviews, cuisine specialization, and what each chef actually earns.`,
+A restaurant chain is trying to figure out what drives chef salaries. They've got data on years of experience, critic reviews, cuisine specialization, and what each chef actually earns. (Use your common sense, and observe the data carefully, you can just see it without using maths! - We are focussed on the categorical features, not the Experience!)`,
       },
       dataSource: '/assets/LinearRegression/Anova/data.csv',
       categoricalNote: `Two of these features are categorical—they're not numbers, they're labels.

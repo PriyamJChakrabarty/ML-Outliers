@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { users, userProgress, problems } from '@/db/schema';
+import { users, userProgress, problems, roadmapProgress } from '@/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 
 /**
@@ -38,6 +38,18 @@ export async function getUserProfile(userId: string) {
     .where(and(eq(userProgress.userId, userId), eq(userProgress.status, 'completed')))
     .orderBy(desc(userProgress.completedAt));
 
+  // Get roadmap progress
+  const [roadmapData] = await db
+    .select({
+      mlTopicsCompleted: roadmapProgress.mlTopicsCompleted,
+      mlTopicsTotal: roadmapProgress.mlTopicsTotal,
+      dlTopicsCompleted: roadmapProgress.dlTopicsCompleted,
+      dlTopicsTotal: roadmapProgress.dlTopicsTotal,
+    })
+    .from(roadmapProgress)
+    .where(eq(roadmapProgress.userId, userId))
+    .limit(1);
+
   return {
     user,
     completedProblems,
@@ -46,6 +58,12 @@ export async function getUserProfile(userId: string) {
       totalPoints: user.totalPoints,
       currentStreak: user.currentStreak,
       longestStreak: user.longestStreak,
+    },
+    roadmap: roadmapData || {
+      mlTopicsCompleted: 0,
+      mlTopicsTotal: 20,
+      dlTopicsCompleted: 0,
+      dlTopicsTotal: 14,
     },
   };
 }

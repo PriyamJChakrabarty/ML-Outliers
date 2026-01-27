@@ -17,7 +17,7 @@ export const info = {
 
   // Multi-page configuration
   multiPage: true,
-  totalPages: 10,
+  totalPages: 11,
 
   // Page-specific content
   pages: [
@@ -264,17 +264,28 @@ By modifying only the x₂ term to x₂² while keeping other features linear, w
       },
     },
 
-    // Page 10: Completion/Hurray Page
+    // Page 10: Summary Page
     {
       pageNumber: 10,
-      type: 'completion',
+      type: 'explanation',
       prompt: {
-        heading: 'Hurray! You\'ve Mastered Residual Analysis! 🎉',
+        heading: 'Key Takeaways',
         body: `You've successfully learned how to read residual plots and modify your hypothesis to capture non-linear patterns!
 
 This skill is fundamental to building better regression models. By analyzing residual plots, you can identify when your model is missing important patterns and know exactly how to fix it.
 
 Remember: **A good residual plot is a random cloud. Any pattern is a clue for improvement!**`,
+      },
+      hasNextButton: true,
+    },
+
+    // Page 11: Completion/Hurray Page
+    {
+      pageNumber: 11,
+      type: 'completion',
+      prompt: {
+        heading: 'Hurray! 🎉',
+        body: 'You have finished the exercise!',
       },
     },
   ],

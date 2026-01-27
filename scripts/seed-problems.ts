@@ -1,53 +1,97 @@
-import { db } from '../src/db/index.js';
-import { problems } from '../src/db/schema.js';
-import { getAllProblems } from '../src/problems/index.js';
 import * as dotenv from 'dotenv';
+
+// Load env vars FIRST
+dotenv.config({ path: '.env.local' });
 
 /**
  * SEED SCRIPT: Problems
  *
- * Syncs problems from the Registry to the database
- * Ensures database is always in sync with codebase
- *
+ * Syncs problems to the database
  * Run with: npm run db:seed
  */
 
-dotenv.config({ path: '.env.local' });
+// Problem data - inline to avoid CSS import issues
+const allProblems = [
+  {
+    slug: 'log-transform',
+    title: 'Transform, Transform!',
+    module: 'LinearRegression',
+    difficulty: 'beginner' as const,
+    basePoints: 100,
+    displayOrder: 1,
+    isPublished: true,
+  },
+  {
+    slug: 'dropping-the-junk',
+    title: 'Dropping the Junk',
+    module: 'LinearRegression',
+    difficulty: 'beginner' as const,
+    basePoints: 100,
+    displayOrder: 2,
+    isPublished: true,
+  },
+  {
+    slug: 'categorical-features',
+    title: 'Categorical Features',
+    module: 'LinearRegression',
+    difficulty: 'beginner' as const,
+    basePoints: 100,
+    displayOrder: 3,
+    isPublished: true,
+  },
+  {
+    slug: 'residual-plot',
+    title: 'Residual Plot Analysis',
+    module: 'LinearRegression',
+    difficulty: 'intermediate' as const,
+    basePoints: 100,
+    displayOrder: 4,
+    isPublished: true,
+  },
+  {
+    slug: 'more-residuals',
+    title: 'More Residuals',
+    module: 'LinearRegression',
+    difficulty: 'intermediate' as const,
+    basePoints: 100,
+    displayOrder: 5,
+    isPublished: true,
+  },
+  {
+    slug: 'autocorrelation',
+    title: 'Autocorrelation',
+    module: 'LinearRegression',
+    difficulty: 'advanced' as const,
+    basePoints: 100,
+    displayOrder: 6,
+    isPublished: true,
+  },
+];
 
 async function seedProblems() {
-  console.log('🌱 Seeding problems from registry to database...\n');
+  // Dynamic import AFTER env vars are loaded
+  const { db } = await import('../src/db/index.js');
+  const { problems } = await import('../src/db/schema.js');
+
+  console.log('🌱 Seeding problems to database...\n');
 
   try {
-    const problemsFromRegistry = getAllProblems();
+    console.log(`Found ${allProblems.length} problems to seed\n`);
 
-    console.log(`Found ${problemsFromRegistry.length} problems in registry\n`);
-
-    for (const problem of problemsFromRegistry) {
+    for (const problem of allProblems) {
       try {
-        // Extract data from problem info
-        const problemData = {
-          slug: problem.slug,
-          title: problem.title,
-          module: problem.module,
-          difficulty: problem.difficulty,
-          basePoints: problem.scoring?.basePoints || 100,
-          displayOrder: problem.meta?.displayOrder || 999,
-          isPublished: problem.meta?.isPublished !== false,
-        };
-
-        // Upsert (insert or update if exists)
         await db
           .insert(problems)
-          .values(problemData)
+          .values(problem)
           .onConflictDoUpdate({
             target: problems.slug,
             set: {
-              title: problemData.title,
-              module: problemData.module,
-              difficulty: problemData.difficulty,
-              basePoints: problemData.basePoints,
-              displayOrder: problemData.displayOrder,
-              isPublished: problemData.isPublished,
+              title: problem.title,
+              module: problem.module,
+              difficulty: problem.difficulty,
+              basePoints: problem.basePoints,
+              displayOrder: problem.displayOrder,
+              isPublished: problem.isPublished,
               updatedAt: new Date(),
             },
           });
