@@ -41,6 +41,12 @@ export const users = pgTable('users', {
   longestStreak: integer('longest_streak').default(0).notNull(),
   lastActivityDate: timestamp('last_activity_date'),
 
+  // Username change tracking (1 month cooldown)
+  usernameUpdatedAt: timestamp('username_updated_at'),
+
+  // Obscene username attempts tracking (fallback to roll number format after 3)
+  obsceneAttempts: integer('obscene_attempts').default(0).notNull(),
+
   // Metadata
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -126,13 +132,39 @@ export const userProgress = pgTable('user_progress', {
   statusIdx: index('user_progress_status_idx').on(table.status),
 }));
 
+/**
+ * Roadmap Progress Table
+ * Stores roadmap completions for each user
+ */
+export const roadmapProgress = pgTable('roadmap_progress', {
+  id: serial('id').primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+
+  // Progress data stored as JSON
+  completions: text('completions').notNull().default('{}'), // JSON object of topic completions
+  language: text('language').notNull().default('english'), // 'english' | 'hindi'
+
+  // Computed stats for quick queries
+  mlTopicsCompleted: integer('ml_topics_completed').default(0).notNull(),
+  mlTopicsTotal: integer('ml_topics_total').default(20).notNull(),
+  dlTopicsCompleted: integer('dl_topics_completed').default(0).notNull(),
+  dlTopicsTotal: integer('dl_topics_total').default(14).notNull(),
+
+  // Metadata
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  userIdUnique: uniqueIndex('roadmap_progress_user_id_idx').on(table.userId),
+}));
+
 // ============================================
 // RELATIONS
 // ============================================
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   submissions: many(submissions),
   progress: many(userProgress),
+  roadmapProgress: one(roadmapProgress),
 }));
 
 export const problemsRelations = relations(problems, ({ many }) => ({
@@ -159,5 +191,12 @@ export const userProgressRelations = relations(userProgress, ({ one }) => ({
   problem: one(problems, {
     fields: [userProgress.problemId],
     references: [problems.id],
+  }),
+}));
+
+export const roadmapProgressRelations = relations(roadmapProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [roadmapProgress.userId],
+    references: [users.id],
   }),
 }));

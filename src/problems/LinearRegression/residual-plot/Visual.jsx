@@ -40,8 +40,24 @@ export default function Visual({ problemInfo }) {
     }
   };
 
-  const handleCompletion = () => {
+  const handleCompletion = async () => {
+    // Mark the problem as complete regardless of answer correctness
+    try {
+      await fetch('/api/mark-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ problemSlug: 'residual-plot' }),
+      });
+    } catch (error) {
+      console.error('Error marking problem complete:', error);
+    }
+
+    // Update localStorage (legacy) and dispatch event
     markComplete('residual-plot');
+    window.dispatchEvent(new CustomEvent('completion-updated', {
+      detail: { problemSlug: 'residual-plot' }
+    }));
+
     router.push('/module/LinearRegression');
   };
 
@@ -463,9 +479,15 @@ function MultipleChoicePage({
   );
 }
 
-// Page 10: Completion Page
+// Page 10: Completion Page - UNIFORM STANDARD
 function CompletionPage({ data, handleCompletion }) {
-  // Helper to render formatted text with bold
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onComplete = async () => {
+    setIsLoading(true);
+    await handleCompletion();
+  };
+
   const renderFormattedText = (text) => {
     if (!text) return null;
     const parts = text.split('**');
@@ -476,7 +498,7 @@ function CompletionPage({ data, handleCompletion }) {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           fontWeight: 700,
-          fontSize: '1.35rem'
+          fontSize: '1.35rem',
         }}>{part}</strong>;
       }
       return part;
@@ -484,66 +506,94 @@ function CompletionPage({ data, handleCompletion }) {
   };
 
   return (
-    <div className={styles.completionPage}>
-      <div className={styles.completionContent}>
-        <h1 style={{
-          fontSize: '3rem',
-          fontWeight: 800,
-          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          textAlign: 'center',
-          marginBottom: '2.5rem',
-          letterSpacing: '-0.02em'
-        }}>
-          {data.prompt.heading}
-        </h1>
+    <div style={{
+      maxWidth: '900px',
+      margin: '0 auto',
+      padding: '2rem',
+      textAlign: 'center',
+    }}>
+      <h1 style={{
+        fontSize: '3rem',
+        fontWeight: 800,
+        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginBottom: '2.5rem',
+        letterSpacing: '-0.02em',
+      }}>
+        {data.prompt.heading}
+      </h1>
 
-        <div style={{
-          maxWidth: '750px',
-          margin: '0 auto 3rem auto'
-        }}>
-          {data.prompt.body.split('\n\n').map((para, idx) => (
-            <p key={idx} style={{
-              fontSize: '1.3rem',
-              lineHeight: '1.9',
-              color: '#2d3748',
-              textAlign: 'center',
-              marginBottom: '1.5rem'
-            }}>
-              {renderFormattedText(para)}
-            </p>
-          ))}
-        </div>
+      <div style={{
+        maxWidth: '750px',
+        margin: '0 auto 3rem auto',
+      }}>
+        {data.prompt.body.split('\n\n').map((para, idx) => (
+          <p key={idx} style={{
+            fontSize: '1.3rem',
+            lineHeight: '1.9',
+            color: '#2d3748',
+            marginBottom: '1.5rem',
+          }}>
+            {renderFormattedText(para)}
+          </p>
+        ))}
+      </div>
 
-        <button
-          onClick={handleCompletion}
-          style={{
-            padding: '1.2rem 3rem',
-            fontSize: '1.2rem',
-            fontWeight: 700,
-            color: 'white',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            border: 'none',
-            borderRadius: '12px',
-            cursor: 'pointer',
-            boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            display: 'block',
-            margin: '0 auto'
-          }}
-          onMouseEnter={(e) => {
+      <button
+        onClick={onComplete}
+        disabled={isLoading}
+        style={{
+          padding: '1.2rem 3rem',
+          fontSize: '1.2rem',
+          fontWeight: 700,
+          color: 'white',
+          background: isLoading
+            ? 'linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%)'
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: isLoading ? 'wait' : 'pointer',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.75rem',
+          minWidth: '320px',
+          margin: '0 auto',
+        }}
+        onMouseEnter={(e) => {
+          if (!isLoading) {
             e.target.style.transform = 'translateY(-3px)';
             e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0)';
-            e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
-          }}
-        >
-          Return to Linear Regression Module →
-        </button>
-      </div>
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'translateY(0)';
+          e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
+        }}
+      >
+        {isLoading && (
+          <span style={{
+            width: '20px',
+            height: '20px',
+            border: '3px solid rgba(255,255,255,0.3)',
+            borderTop: '3px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }} />
+        )}
+        {isLoading ? 'Saving Progress...' : 'Return to Linear Regression Module →'}
+      </button>
+      {isLoading && (
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      )}
     </div>
   );
 }

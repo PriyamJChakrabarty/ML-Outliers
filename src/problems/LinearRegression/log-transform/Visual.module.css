@@ -1,10 +1,98 @@
 .visualContainer {
   width: 100%;
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem 0;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Progress Bar */
+.progressBar {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.progressDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.progressDot.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 0 12px rgba(102, 126, 234, 0.5);
+  transform: scale(1.2);
+}
+
+.progressDot.completed {
+  background: #10b981;
+}
+
+/* Page Content */
+.pageContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Navigation Buttons */
+.navigationButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  margin-top: auto;
+  border-top: 1px solid #e2e8f0;
+}
+
+.navButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4a5568;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.navButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.navButton.nextButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.navButton.nextButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.pageIndicator {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Legacy styles for backward compatibility */
 .imageWrapper {
   position: relative;
   width: 100%;
@@ -48,6 +136,15 @@
 @media (max-width: 768px) {
   .visualContainer {
     padding: 1rem 0;
+  }
+
+  .navigationButtons {
+    padding: 1rem;
+  }
+
+  .navButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
 
   .imageWrapper {

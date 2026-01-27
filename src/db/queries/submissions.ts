@@ -191,3 +191,103 @@ async function incrementAttemptCount(userUuid: string, problemId: number) {
     })
     .where(eq(users.id, userUuid));
 }
+
+/**
+ * Mark a problem as complete regardless of answer correctness
+ * Used when user clicks "Continue Learning" after any answer
+ * FULL POINTS are awarded for completion (same as correct answer)
+ */
+export async function markProblemComplete({
+  userId,
+  problemSlug,
+}: {
+  userId: string; // Clerk ID
+  problemSlug: string;
+}) {
+  // Get user UUID from clerk_id
+  const user = await db
+    .select()
+    .from(users)
+    .where(eq(users.clerkId, userId))
+    .limit(1);
+
+  if (!user.length) {
+    throw new Error('User not found in database.');
+  }
+
+  // Get problem ID and basePoints from slug
+  const problem = await db
+    .select()
+    .from(problems)
+    .where(eq(problems.slug, problemSlug))
+    .limit(1);
+
+  if (!problem.length) {
+    throw new Error(`Problem not found: ${problemSlug}`);
+  }
+
+  const userUuid = user[0].id;
+  const problemId = problem[0].id;
+  const pointsToAward = problem[0].basePoints || 100; // Default 100 if not set
+
+  // Check if progress record exists
+  const existing = await db
+    .select()
+    .from(userProgress)
+    .where(and(eq(userProgress.userId, userUuid), eq(userProgress.problemId, problemId)))
+    .limit(1);
+
+  if (!existing.length) {
+    // Create new progress record as completed with full points
+    await db.insert(userProgress).values({
+      userId: userUuid,
+      problemId,
+      status: 'completed',
+      attemptsCount: 1,
+      completedAt: new Date(),
+      pointsEarned: pointsToAward,
+    });
+
+    // Award points to user (first completion)
+    await db
+      .update(users)
+      .set({
+        totalPoints: sql`${users.totalPoints} + ${pointsToAward}`,
+        lastActivityDate: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userUuid));
+  } else if (existing[0].status !== 'completed') {
+    // Not yet completed - mark complete and award points
+    await db
+      .update(userProgress)
+      .set({
+        status: 'completed',
+        completedAt: new Date(),
+        pointsEarned: pointsToAward,
+        updatedAt: new Date(),
+      })
+      .where(eq(userProgress.id, existing[0].id));
+
+    // Award points to user
+    await db
+      .update(users)
+      .set({
+        totalPoints: sql`${users.totalPoints} + ${pointsToAward}`,
+        lastActivityDate: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userUuid));
+  } else {
+    // Already completed - just update activity date, no duplicate points
+    await db
+      .update(users)
+      .set({
+        lastActivityDate: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userUuid));
+  }
+
+  return { success: true, problemSlug };
+}

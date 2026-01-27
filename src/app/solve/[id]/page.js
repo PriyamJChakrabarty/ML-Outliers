@@ -1,15 +1,16 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProblem } from '@/problems/index.js';
-import { markComplete } from '@/lib/completionTracker';
 import styles from './solve.module.css';
 
 export default function SolvePage({ params }) {
   const { id } = use(params);
+  const router = useRouter();
 
   // Get problem from registry
   const problem = getProblem(id);
@@ -23,6 +24,7 @@ export default function SolvePage({ params }) {
   const [hintIndex, setHintIndex] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
   const [startTime, setStartTime] = useState(null);
+  const [isMarkingComplete, setIsMarkingComplete] = useState(false);
 
   // Initialize timer on mount
   useEffect(() => {
@@ -103,7 +105,8 @@ export default function SolvePage({ params }) {
         const result = await response.json();
 
         if (result.isCorrect) {
-          markComplete(id);
+          // Dispatch event to notify other components to refresh completions from database
+          window.dispatchEvent(new CustomEvent('completion-updated', { detail: { problemSlug: id } }));
           setFeedback({
             type: 'success',
             ...info.feedback.correct,
@@ -162,7 +165,8 @@ export default function SolvePage({ params }) {
         const result = await response.json();
 
         if (result.isCorrect) {
-          markComplete(id);
+          // Dispatch event to notify other components to refresh completions from database
+          window.dispatchEvent(new CustomEvent('completion-updated', { detail: { problemSlug: id } }));
           setFeedback({
             type: 'success',
             ...info.feedback.correct,
@@ -192,6 +196,30 @@ export default function SolvePage({ params }) {
       setShowHint(true);
     } else if (hintIndex < info.hints.length - 1) {
       setHintIndex(hintIndex + 1);
+    }
+  };
+
+  // Handle Continue Learning - marks problem complete regardless of answer correctness
+  const handleContinueLearning = async () => {
+    setIsMarkingComplete(true);
+
+    try {
+      // Mark the problem as complete in the database
+      await fetch('/api/mark-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ problemSlug: id }),
+      });
+
+      // Dispatch event to notify other components to refresh completions
+      window.dispatchEvent(new CustomEvent('completion-updated', { detail: { problemSlug: id } }));
+
+      // Navigate to the module page
+      router.push(`/module/${info.module}`);
+    } catch (error) {
+      console.error('Failed to mark problem complete:', error);
+      // Navigate anyway even if marking fails
+      router.push(`/module/${info.module}`);
     }
   };
 
@@ -359,14 +387,15 @@ export default function SolvePage({ params }) {
 
               {(feedback.type === 'success' || feedback.type === 'incorrect') && (
                 <div className={styles.successActions}>
-                  <Link
-                    href="/home"
+                  <button
+                    onClick={handleContinueLearning}
+                    disabled={isMarkingComplete}
                     className={`${styles.continueButton} ${
                       feedback.type === 'incorrect' ? styles.continueButtonIncorrect : ''
                     }`}
                   >
-                    Continue Learning
-                  </Link>
+                    {isMarkingComplete ? 'Loading...' : 'Continue Learning'}
+                  </button>
                 </div>
               )}
             </div>

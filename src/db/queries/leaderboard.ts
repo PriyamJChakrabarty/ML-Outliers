@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { users, userProgress } from '@/db/schema';
+import { users, userProgress, roadmapProgress } from '@/db/schema';
 import { sql, eq, desc, and, gte } from 'drizzle-orm';
 import { startOfMonth, startOfWeek } from 'date-fns';
 
@@ -26,10 +26,16 @@ export async function getGlobalLeaderboard(limit = 100) {
       currentStreak: users.currentStreak,
       exercisesCompleted: sql<number>`count(distinct case when ${userProgress.status} = 'completed' then ${userProgress.problemId} end)`.as('exercises_completed'),
       averageFastestTime: sql<number>`avg(${userProgress.fastestTimeSeconds})`.as('avg_fastest_time'),
+      // Roadmap progress
+      mlTopicsCompleted: roadmapProgress.mlTopicsCompleted,
+      mlTopicsTotal: roadmapProgress.mlTopicsTotal,
+      dlTopicsCompleted: roadmapProgress.dlTopicsCompleted,
+      dlTopicsTotal: roadmapProgress.dlTopicsTotal,
     })
     .from(users)
     .leftJoin(userProgress, eq(users.id, userProgress.userId))
-    .groupBy(users.id)
+    .leftJoin(roadmapProgress, eq(users.id, roadmapProgress.userId))
+    .groupBy(users.id, roadmapProgress.mlTopicsCompleted, roadmapProgress.mlTopicsTotal, roadmapProgress.dlTopicsCompleted, roadmapProgress.dlTopicsTotal)
     .orderBy(
       desc(sql`count(distinct case when ${userProgress.status} = 'completed' then ${userProgress.problemId} end)`),
       sql`avg(${userProgress.fastestTimeSeconds}) ASC NULLS LAST`

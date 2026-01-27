@@ -107,7 +107,6 @@ export default function LeaderboardPage() {
               </div>
               <div className={styles.podiumName}>{currentLeaderboard[1]?.username || currentLeaderboard[1]?.fullName || 'Anonymous'}</div>
               <div className={styles.podiumScore}>{currentLeaderboard[1]?.exercisesCompleted || 0} exercises</div>
-              <div className={styles.podiumBadge}>Expert</div>
             </div>
 
             {/* 1st Place */}
@@ -127,7 +126,6 @@ export default function LeaderboardPage() {
               </div>
               <div className={styles.podiumName}>{currentLeaderboard[0]?.username || currentLeaderboard[0]?.fullName || 'Anonymous'}</div>
               <div className={styles.podiumScore}>{currentLeaderboard[0]?.exercisesCompleted || 0} exercises</div>
-              <div className={styles.podiumBadge}>Master</div>
             </div>
 
             {/* 3rd Place */}
@@ -144,7 +142,6 @@ export default function LeaderboardPage() {
               </div>
               <div className={styles.podiumName}>{currentLeaderboard[2]?.username || currentLeaderboard[2]?.fullName || 'Anonymous'}</div>
               <div className={styles.podiumScore}>{currentLeaderboard[2]?.exercisesCompleted || 0} exercises</div>
-              <div className={styles.podiumBadge}>Expert</div>
             </div>
           </div>
         )}
@@ -152,7 +149,17 @@ export default function LeaderboardPage() {
         {/* Leaderboard Table */}
         <div className={styles.leaderboardSection}>
           {loading ? (
-            <div className={styles.loading}>Loading leaderboard...</div>
+            <div className={styles.loadingContainer}>
+              <div className={styles.loadingSpinner}></div>
+              <p className={styles.loadingText}>
+                Loading rankings
+                <span className={styles.loadingDots}>
+                  <span className={styles.loadingDot}></span>
+                  <span className={styles.loadingDot}></span>
+                  <span className={styles.loadingDot}></span>
+                </span>
+              </p>
+            </div>
           ) : currentLeaderboard.length === 0 ? (
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>🎯</div>
@@ -218,10 +225,6 @@ export default function LeaderboardPage() {
                     <div className={styles.scoreColumn}>
                       <div className={styles.totalPoints}>{points.toLocaleString()}</div>
                       <div className={styles.pointsLabel}>points</div>
-                    </div>
-
-                    <div className={styles.badgeColumn}>
-                      <div className={styles.userBadge}>{user.badge || (exercisesCount > 30 ? 'Master' : exercisesCount > 20 ? 'Expert' : exercisesCount > 10 ? 'Advanced' : 'Beginner')}</div>
                     </div>
                   </Link>
                 );

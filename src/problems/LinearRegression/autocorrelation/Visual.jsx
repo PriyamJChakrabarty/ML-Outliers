@@ -38,8 +38,24 @@ export default function Visual({ problemInfo }) {
     }
   };
 
-  const handleCompletion = () => {
+  const handleCompletion = async () => {
+    // Mark the problem as complete regardless of answer correctness
+    try {
+      await fetch('/api/mark-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ problemSlug: 'autocorrelation' }),
+      });
+    } catch (error) {
+      console.error('Error marking problem complete:', error);
+    }
+
+    // Update localStorage (legacy) and dispatch event
     markComplete('autocorrelation');
+    window.dispatchEvent(new CustomEvent('completion-updated', {
+      detail: { problemSlug: 'autocorrelation' }
+    }));
+
     router.push('/module/LinearRegression');
   };
 
@@ -1035,10 +1051,50 @@ function CorrelationOrderingQuestionPage({
         lineHeight: '1.9',
         color: '#2d3748',
         textAlign: 'center',
-        marginBottom: '2.5rem',
+        marginBottom: '1.5rem',
       }}>
-        {data.prompt.body}
+        Remember that for autocorrelation to occur e<sub>t</sub> should follow some kind of trend with respect to e<sub>t-1</sub>
+        <br /><br />
+        <strong style={{ color: '#667eea', fontWeight: 700 }}>Observe the below and tell in which order the strength of correlation increases</strong>
       </p>
+
+      {/* Beautified bracket text */}
+      <div style={{
+        padding: '1.25rem 2rem',
+        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%)',
+        borderRadius: '12px',
+        border: '2px solid rgba(59, 130, 246, 0.3)',
+        boxShadow: '0 4px 15px rgba(59, 130, 246, 0.1)',
+        maxWidth: '800px',
+        margin: '0 auto 2.5rem auto',
+      }}>
+        <p style={{
+          fontSize: '1.1rem',
+          lineHeight: '1.8',
+          color: '#1e40af',
+          fontStyle: 'italic',
+          textAlign: 'center',
+          margin: 0,
+        }}>
+          📊 <span style={{ fontWeight: 500 }}>Remember in lag plots, for autocorrelation look for points showing a</span>{' '}
+          <strong style={{
+            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 800,
+            fontSize: '1.15rem',
+          }}>uniform trend throughout</strong>{' '}
+          <span style={{ fontWeight: 500 }}>— random points clustered or oscillating around the central horizontal line would</span>{' '}
+          <strong style={{
+            background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 800,
+            fontSize: '1.15rem',
+          }}>NOT</strong>{' '}
+          <span style={{ fontWeight: 500 }}>be considered to show autocorrelation</span>
+        </p>
+      </div>
 
       {/* 2x2 Grid of Images */}
       <div style={{
@@ -1439,9 +1495,15 @@ function PredictChangePage({ data }) {
   );
 }
 
-// Page 8: Completion
+// Page 8: Completion - UNIFORM STANDARD
 function CompletionPage({ data, handleCompletion }) {
-  // Format text with bold
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onComplete = async () => {
+    setIsLoading(true);
+    await handleCompletion();
+  };
+
   const renderFormattedText = (text) => {
     if (!text) return null;
     const parts = text.split('**');
@@ -1479,7 +1541,8 @@ function CompletionPage({ data, handleCompletion }) {
       </h1>
 
       <div style={{
-        marginBottom: '3rem',
+        maxWidth: '750px',
+        margin: '0 auto 3rem auto',
       }}>
         {data.prompt.body.split('\n\n').map((para, idx) => (
           <p key={idx} style={{
@@ -1494,30 +1557,59 @@ function CompletionPage({ data, handleCompletion }) {
       </div>
 
       <button
-        onClick={handleCompletion}
+        onClick={onComplete}
+        disabled={isLoading}
         style={{
           padding: '1.2rem 3rem',
           fontSize: '1.2rem',
           fontWeight: 700,
           color: 'white',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: isLoading
+            ? 'linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%)'
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           border: 'none',
           borderRadius: '12px',
-          cursor: 'pointer',
+          cursor: isLoading ? 'wait' : 'pointer',
           boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
-          transition: 'all 0.3s ease',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.75rem',
+          minWidth: '320px',
+          margin: '0 auto',
         }}
         onMouseEnter={(e) => {
-          e.target.style.transform = 'translateY(-3px)';
-          e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
+          if (!isLoading) {
+            e.target.style.transform = 'translateY(-3px)';
+            e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
+          }
         }}
         onMouseLeave={(e) => {
           e.target.style.transform = 'translateY(0)';
           e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
         }}
       >
-        Return to Linear Regression Module →
+        {isLoading && (
+          <span style={{
+            width: '20px',
+            height: '20px',
+            border: '3px solid rgba(255,255,255,0.3)',
+            borderTop: '3px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }} />
+        )}
+        {isLoading ? 'Saving Progress...' : 'Return to Linear Regression Module →'}
       </button>
+      {isLoading && (
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      )}
     </div>
   );
 }

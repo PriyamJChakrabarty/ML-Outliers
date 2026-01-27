@@ -1,11 +1,10 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { use, useState, useEffect, useCallback } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProblemsByModule } from '@/problems/index.js';
-import { getCompletions } from '@/lib/completionTracker';
 import styles from './module.module.css';
 
 // Module metadata
@@ -40,26 +39,36 @@ export default function ModulePage({ params }) {
   // Get exercises for this module
   const exercises = moduleInfo ? getProblemsByModule(id) : [];
 
-  // Load completions from localStorage
+  // Fetch completions from database
+  const fetchCompletions = useCallback(async () => {
+    try {
+      const response = await fetch('/api/user-completions');
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        const completedSlugs = data.completedSlugs || [];
+        const completed = exercises
+          .map(ex => ex.slug)
+          .filter(slug => completedSlugs.includes(slug));
+        setCompletedExercises(completed);
+      }
+    } catch (error) {
+      console.error('Failed to fetch completions:', error);
+    }
+  }, [exercises]);
+
+  // Load completions from database
   useEffect(() => {
-    const completions = getCompletions();
-    const completed = exercises
-      .map(ex => ex.slug)
-      .filter(slug => completions.has(slug));
-    setCompletedExercises(completed);
+    fetchCompletions();
 
     // Listen for completion updates
     const handleCompletionUpdate = () => {
-      const updatedCompletions = getCompletions();
-      const updated = exercises
-        .map(ex => ex.slug)
-        .filter(slug => updatedCompletions.has(slug));
-      setCompletedExercises(updated);
+      fetchCompletions();
     };
 
     window.addEventListener('completion-updated', handleCompletionUpdate);
     return () => window.removeEventListener('completion-updated', handleCompletionUpdate);
-  }, [exercises]);
+  }, [fetchCompletions]);
 
   if (!moduleInfo) {
     return (

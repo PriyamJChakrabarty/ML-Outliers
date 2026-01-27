@@ -8,19 +8,23 @@ import { eq, and, ne } from 'drizzle-orm';
  *
  * Allows authenticated users to change their username
  * Enforces uniqueness constraint at application level
+ * ENFORCES 1-MONTH COOLDOWN between username changes
  *
  * SECURITY: Validates user authentication via Clerk
  * SCALABILITY: Uses database unique constraint + app-level validation
  * INDUSTRY STANDARD: Rate limiting should be added via middleware in production
  *
  * Returns:
- * - status: 'success' | 'username_taken' | 'invalid_username' | 'not_authenticated' | 'error'
+ * - status: 'success' | 'username_taken' | 'invalid_username' | 'cooldown_active' | 'not_authenticated' | 'error'
  */
 
 // Username validation constants
 const USERNAME_MIN_LENGTH = 3;
 const USERNAME_MAX_LENGTH = 20;
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]+$/;
+
+// Cooldown period: 1 month in milliseconds
+const USERNAME_CHANGE_COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 // Reserved usernames that cannot be used
 const RESERVED_USERNAMES = [
@@ -108,8 +112,29 @@ export async function POST(request: Request) {
       }, { status: 404 });
     }
 
+    const user = currentUser[0];
+
+    // Check if username change is on cooldown (only if usernameUpdatedAt exists)
+    if (user.usernameUpdatedAt) {
+      const timeSinceLastChange = Date.now() - new Date(user.usernameUpdatedAt).getTime();
+      const remainingTime = USERNAME_CHANGE_COOLDOWN_MS - timeSinceLastChange;
+
+      if (remainingTime > 0) {
+        // Calculate remaining days
+        const remainingDays = Math.ceil(remainingTime / (24 * 60 * 60 * 1000));
+        const nextChangeDate = new Date(new Date(user.usernameUpdatedAt).getTime() + USERNAME_CHANGE_COOLDOWN_MS);
+
+        return Response.json({
+          status: 'cooldown_active',
+          message: `You can change your username again in ${remainingDays} day${remainingDays === 1 ? '' : 's'}`,
+          remainingDays,
+          nextChangeDate: nextChangeDate.toISOString(),
+        }, { status: 429 });
+      }
+    }
+
     // Check if username is same as current
-    if (currentUser[0].username === trimmedUsername) {
+    if (user.username === trimmedUsername) {
       return Response.json({
         status: 'invalid_username',
         message: 'This is already your current username',
@@ -135,12 +160,15 @@ export async function POST(request: Request) {
       }, { status: 409 });
     }
 
-    // Update username
+    // Update username, set usernameUpdatedAt for cooldown tracking, and reset obscene attempts
+    const now = new Date();
     await db
       .update(users)
       .set({
         username: trimmedUsername,
-        updatedAt: new Date(),
+        usernameUpdatedAt: now,
+        updatedAt: now,
+        obsceneAttempts: 0, // Reset obscene attempts on successful username change
       })
       .where(eq(users.clerkId, clerkId));
 

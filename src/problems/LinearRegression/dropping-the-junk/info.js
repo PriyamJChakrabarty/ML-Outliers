@@ -45,7 +45,7 @@ In this challenge, you'll learn to spot the features that are secretly sabotagin
 
 **The year is 2050.** A zombie virus has taken over the world. You are the Chief Data Scientist for the last human sanctuary. You have a historical dataset of survivors from the "Outlands," and your job is to build a Linear Regression model to predict how many **Days** a new survivor will last outside the walls based on their attributes.
 
-**Which of the following features do you think are worthy of dropping?**`,
+**Which of the following features do you think are worthy of dropping?** (We are not concerned with features that are similar, but more with **Features that do not have much influence on the No. of Days Survived (the target variable)**)`,
       },
       type: 'multiple-choice',
       features: [
@@ -53,10 +53,9 @@ In this challenge, you'll learn to spot the features that are secretly sabotagin
         { name: 'Instagram_Followers', category: 'irrelevant' },
         { name: 'Weapon_Mastery', category: 'relevant' },
         { name: 'Lucky_Number', category: 'irrelevant' },
-        { name: 'Resource_Pack_Weight', category: 'relevant' },
+        { name: 'Backpack_Weight', category: 'relevant' },
         { name: 'Sprint_Speed_kmh', category: 'relevant' },
         { name: 'IQ_Score', category: 'relevant' },
-        { name: 'Accuracy_Rating', category: 'relevant' },
         { name: 'Shoe_Brand', category: 'irrelevant' },
         { name: 'Food_Rations_Days', category: 'relevant' },
         { name: 'Age_Years', category: 'relevant' },
@@ -102,7 +101,7 @@ Two variables are said to be **correlated** if a change in one causes a correspo
 - **Highway Miles (%)** - Percentage that the owner claims to have driven on highways vs rough roads
 - **Selling Price (INR Lakhs)** - What it actually sold for (target)
 
-But here's the thing: not all of this matters. Some features are just noise. Find the features that are unnecessary!`,
+But here's the thing: not all of this matters. Some features are just noise. **Find the features that are unnecessary!** (You will see that it is difficult to see the data and find out features which are not necessary, thus we will rely on math! Scroll down to find out - Use the button below to see the visualisation of the correlation values, you can try doing the maths when you have time!)`,
       },
       type: 'data-analysis',
       dataSource: '/assets/LinearRegression/Correlation/data.csv',
