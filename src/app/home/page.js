@@ -47,6 +47,16 @@ export default function HomePage() {
   const [expandedSections, setExpandedSections] = useState({
     ml: true, // Traditional Machine Learning dropdown
     dl: false, // Deep Learning dropdown
+    // Extra resource dropdowns
+    mlProjects: false,
+    dlProjects: false,
+    andrewNg: false,
+    andrewNgTemplate: false, // Nested dropdown for financial aid template
+    vizuara: false,
+    llms: false,
+    rl: false,
+    threeB1B: false,
+    nicholasRenotte: false,
   });
   const [roadmapLoading, setRoadmapLoading] = useState(true);
 
@@ -1617,16 +1627,10 @@ export default function HomePage() {
             {/* Stats Section - Separate Progress Bars for ML and DL */}
             <div className={styles.roadmapStatsCompact}>
               {/* ML Progress */}
-              <div className={styles.roadmapStatsCardMerged}>
+              <div className={`${styles.roadmapStatsCardMerged} ${styles.mlProgressCard}`}>
                 <div className={styles.roadmapStatsHeader}>
                   <div className={styles.roadmapStatsLeft}>
-                    <Image
-                      src="/assets/Roadmap/emoji/ML.png"
-                      alt="ML"
-                      width={48}
-                      height={48}
-                      className={styles.roadmapStatsIconImage}
-                    />
+                    <div className={styles.roadmapStatsIcon}>🤖</div>
                     <div className={styles.roadmapStatsInfo}>
                       <div className={styles.roadmapStatsValue}>
                         {getMLRoadmapStats().completed}<span className={styles.roadmapStatsMax}>/{getMLRoadmapStats().total}</span>
@@ -1654,13 +1658,7 @@ export default function HomePage() {
               <div className={`${styles.roadmapStatsCardMerged} ${styles.dlProgressCard}`}>
                 <div className={styles.roadmapStatsHeader}>
                   <div className={styles.roadmapStatsLeft}>
-                    <Image
-                      src="/assets/Roadmap/emoji/DL.png"
-                      alt="DL"
-                      width={48}
-                      height={48}
-                      className={styles.roadmapStatsIconImage}
-                    />
+                    <div className={styles.roadmapStatsIcon}>🧠</div>
                     <div className={styles.roadmapStatsInfo}>
                       <div className={styles.roadmapStatsValue}>
                         {getDLRoadmapStats().completed}<span className={styles.roadmapStatsMax}>/{getDLRoadmapStats().total}</span>
@@ -1835,6 +1833,411 @@ export default function HomePage() {
                         {dlRoadmapContent[roadmapLanguage].completionNote}
                       </div>
                     )}
+                  </div>
+                )}
+              </div>
+
+              {/* Extra Resources Section */}
+              <div className={styles.extraResourcesMessage}>
+                <span className={styles.extraResourcesEmoji}>🎉</span>
+                <p>If you have completed the above, you have now completed the fundamentals of ML and DL! You can now explore the below for an even in-depth experience of AI/ML!</p>
+              </div>
+
+              {/* 1. ML Projects for Learning */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownOrange}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderOrange} ${expandedSections.mlProjects ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('mlProjects')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.mlProjects ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>🔧 ML Projects for Learning</span>
+                  </div>
+                  <div className={styles.dropdownHeaderRight}>
+                    <a
+                      href="https://youtube.com/playlist?list=PLfFghEzKVmjvuSA67LszN1dZ-Dd_pkus6&si=ZITGoZAfTviEaZWF"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.playlistLink} ${styles.orangePlaylistLink}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      📺 Playlist
+                    </a>
+                  </div>
+                </button>
+                {expandedSections.mlProjects && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-ml-projects'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-ml-projects')}
+                      >
+                        {roadmapCompletions['extra-ml-projects'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-ml-projects'] ? styles.completed : ''}`}>
+                          ML Projects Playlist
+                        </span>
+                        <a href="https://youtube.com/playlist?list=PLfFghEzKVmjvuSA67LszN1dZ-Dd_pkus6&si=ZITGoZAfTviEaZWF" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://youtube.com/playlist?list=PLfFghEzKVmjvuSA67LszN1dZ-Dd_pkus6
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. DL Projects for Learning */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownPurple}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderPurple} ${expandedSections.dlProjects ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('dlProjects')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.dlProjects ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>🧪 DL Projects for Learning</span>
+                  </div>
+                  <div className={styles.dropdownHeaderRight}>
+                    <a
+                      href="https://youtube.com/playlist?list=PLfFghEzKVmjvyT7wdfDJSHhS0FdF8jd-U&si=VEn9Ew3Z2rAwFtgp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.playlistLink} ${styles.purplePlaylistLink}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      📺 Playlist
+                    </a>
+                  </div>
+                </button>
+                {expandedSections.dlProjects && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-dl-projects'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-dl-projects')}
+                      >
+                        {roadmapCompletions['extra-dl-projects'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-dl-projects'] ? styles.completed : ''}`}>
+                          DL Projects Playlist
+                        </span>
+                        <a href="https://youtube.com/playlist?list=PLfFghEzKVmjvyT7wdfDJSHhS0FdF8jd-U&si=VEn9Ew3Z2rAwFtgp" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://youtube.com/playlist?list=PLfFghEzKVmjvyT7wdfDJSHhS0FdF8jd-U
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 3. ML Course by Andrew Ng */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownGreen}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderGreen} ${expandedSections.andrewNg ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('andrewNg')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.andrewNg ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>🎓 ML Course by Andrew Ng</span>
+                  </div>
+                  <div className={styles.dropdownHeaderRight}>
+                    <a
+                      href="https://www.coursera.org/specializations/machine-learning-introduction"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.playlistLink} ${styles.greenPlaylistLink}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      🔗 Coursera
+                    </a>
+                  </div>
+                </button>
+                {expandedSections.andrewNg && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.andrewNgNote}>
+                      <strong>Note:</strong> Apply for financial aid (generally accepted within 15 days), you don&apos;t need to pay for the course!
+                    </div>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-andrew-ng'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-andrew-ng')}
+                      >
+                        {roadmapCompletions['extra-andrew-ng'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-andrew-ng'] ? styles.completed : ''}`}>
+                          Machine Learning Specialization
+                        </span>
+                        <a href="https://www.coursera.org/specializations/machine-learning-introduction" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://www.coursera.org/specializations/machine-learning-introduction
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Nested dropdown for Financial Aid Template */}
+                    <div className={`${styles.nestedDropdown}`}>
+                      <button
+                        className={`${styles.nestedDropdownHeader} ${expandedSections.andrewNgTemplate ? styles.expanded : ''}`}
+                        onClick={() => toggleSection('andrewNgTemplate')}
+                      >
+                        <span className={styles.dropdownIcon}>{expandedSections.andrewNgTemplate ? '▼' : '▶'}</span>
+                        <span>📝 Template for Financial Aid Application</span>
+                      </button>
+                      {expandedSections.andrewNgTemplate && (
+                        <div className={styles.nestedDropdownContent}>
+                          <p>Being an undergraduate student of Indian Institute of Information Technology, Allahabad in my 1st year majoring in Information Technology. My major being Information Technology and keen interest in Artificial Intelligence and machine learning, therefore this course will help me a lot in developing the necessary skill set that will help me achieve my dream. I want to start career in Artificial Intelligence which needs Deep Learning skillsets, which can be great for my career. That is why I need this financial aid.</p>
+                          <p>This course will provide me with a solid foundation in the principles and concepts of machine learning. Moreover, the course emphasizes hands-on experience through practical assignments and projects. By working on real-world problems and implementing machine learning algorithms, I will develop practical skills that are highly valued in the industry. This hands-on approach will enhance my ability to apply machine learning techniques to solve diverse challenges across different domains.</p>
+                          <p>I will commit to all the deadlines put before me and will try my best to complete the course. As a tech enthusiast and researcher, I want to learn Artificial Intelligence and Image processing.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Vizuara playlist for Deep Learning */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownBlue}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderBlue} ${expandedSections.vizuara ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('vizuara')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.vizuara ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>📺 Vizuara Playlist for Deep Learning</span>
+                  </div>
+                  <div className={styles.dropdownHeaderRight}>
+                    <a
+                      href="https://youtube.com/@vizuara?si=gIdA6sfQErMBmZDw"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.playlistLink} ${styles.bluePlaylistLink}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      📺 Channel
+                    </a>
+                  </div>
+                </button>
+                {expandedSections.vizuara && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-vizuara'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-vizuara')}
+                      >
+                        {roadmapCompletions['extra-vizuara'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-vizuara'] ? styles.completed : ''}`}>
+                          Vizuara YouTube Channel
+                        </span>
+                        <a href="https://youtube.com/@vizuara?si=gIdA6sfQErMBmZDw" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://youtube.com/@vizuara
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 5. LLMs */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownPink}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderPink} ${expandedSections.llms ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('llms')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.llms ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>🤖 LLMs (Large Language Models)</span>
+                  </div>
+                </button>
+                {expandedSections.llms && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-llm-article'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-llm-article')}
+                      >
+                        {roadmapCompletions['extra-llm-article'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-llm-article'] ? styles.completed : ''}`}>
+                          Recommended Article to get into LLMs
+                        </span>
+                        <a href="https://github.com/louisfb01/start-llms" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://github.com/louisfb01/start-llms
+                        </a>
+                      </div>
+                    </div>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-karpathy'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-karpathy')}
+                      >
+                        {roadmapCompletions['extra-karpathy'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-karpathy'] ? styles.completed : ''}`}>
+                          Andrej Karpathy Session on LLM
+                        </span>
+                        <a href="https://youtube.com/@andrejkarpathy?si=X23c5Or1Fabbyrfd" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://youtube.com/@andrejkarpathy
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 6. Reinforcement Learning */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownTeal}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderTeal} ${expandedSections.rl ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('rl')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.rl ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>🎮 Reinforcement Learning</span>
+                  </div>
+                </button>
+                {expandedSections.rl && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-rl-intro'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-rl-intro')}
+                      >
+                        {roadmapCompletions['extra-rl-intro'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-rl-intro'] ? styles.completed : ''}`}>
+                          Reinforcement Learning Introduction
+                        </span>
+                        <a href="https://youtu.be/2pWv7GOvuf0?si=tT49glfBsoqliQX4" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://youtu.be/2pWv7GOvuf0
+                        </a>
+                      </div>
+                    </div>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-rl-handson'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-rl-handson')}
+                      >
+                        {roadmapCompletions['extra-rl-handson'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-rl-handson'] ? styles.completed : ''}`}>
+                          Hands On Session
+                        </span>
+                        <a href="https://www.youtube.com/watch?v=CsuIANBnSq8" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://www.youtube.com/watch?v=CsuIANBnSq8
+                        </a>
+                      </div>
+                    </div>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-rl-hf'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-rl-hf')}
+                      >
+                        {roadmapCompletions['extra-rl-hf'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-rl-hf'] ? styles.completed : ''}`}>
+                          HuggingFace Deep RL Course
+                        </span>
+                        <a href="https://huggingface.co/learn/deep-rl-course/unit0/introduction" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://huggingface.co/learn/deep-rl-course/unit0/introduction
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 7. 3B1B Neural Networks */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownGold}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderGold} ${expandedSections.threeB1B ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('threeB1B')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.threeB1B ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>✨ 3B1B Neural Networks Awesome Visualisation</span>
+                  </div>
+                  <div className={styles.dropdownHeaderRight}>
+                    <a
+                      href="https://youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&si=sL0INxLr7B-2Ixex"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.playlistLink} ${styles.goldPlaylistLink}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      📺 Playlist
+                    </a>
+                  </div>
+                </button>
+                {expandedSections.threeB1B && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-3b1b'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-3b1b')}
+                      >
+                        {roadmapCompletions['extra-3b1b'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-3b1b'] ? styles.completed : ''}`}>
+                          3Blue1Brown Neural Networks Playlist
+                        </span>
+                        <a href="https://youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&si=sL0INxLr7B-2Ixex" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 8. Nicholas Renotte - Amazing Projects */}
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownEmerald}`}>
+                <button
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderEmerald} ${expandedSections.nicholasRenotte ? styles.expanded : ''}`}
+                  onClick={() => toggleSection('nicholasRenotte')}
+                >
+                  <div className={styles.dropdownHeaderLeft}>
+                    <span className={styles.dropdownIcon}>{expandedSections.nicholasRenotte ? '▼' : '▶'}</span>
+                    <span className={styles.dropdownTitle}>💡 Follow this channel for amazing projects!</span>
+                  </div>
+                  <div className={styles.dropdownHeaderRight}>
+                    <a
+                      href="https://www.youtube.com/c/nicholasrenotte"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.playlistLink} ${styles.emeraldPlaylistLink}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      📺 Channel
+                    </a>
+                  </div>
+                </button>
+                {expandedSections.nicholasRenotte && (
+                  <div className={styles.roadmapDropdownContent}>
+                    <div className={styles.topicItem}>
+                      <button
+                        className={`${styles.topicCheckbox} ${roadmapCompletions['extra-nicholas'] ? styles.checked : ''}`}
+                        onClick={() => toggleTopicCompletion('extra-nicholas')}
+                      >
+                        {roadmapCompletions['extra-nicholas'] ? '✓' : ''}
+                      </button>
+                      <div className={styles.topicInfo}>
+                        <span className={`${styles.topicTitle} ${roadmapCompletions['extra-nicholas'] ? styles.completed : ''}`}>
+                          Nicholas Renotte YouTube Channel
+                        </span>
+                        <a href="https://www.youtube.com/c/nicholasrenotte" target="_blank" rel="noopener noreferrer" className={styles.resourceItemLink}>
+                          https://www.youtube.com/c/nicholasrenotte
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

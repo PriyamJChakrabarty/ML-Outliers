@@ -1959,13 +1959,6 @@
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
 }
 
-.roadmapStatsIconImage {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
-}
-
 .roadmapStatsInfo {
   flex: 1;
 }
@@ -2591,11 +2584,6 @@
     font-size: 0.95rem;
   }
 
-  .roadmapStatsIconImage {
-    width: 36px;
-    height: 36px;
-  }
-
   .roadmapStatsCardMerged {
     padding: 1.5rem;
   }
@@ -2697,11 +2685,6 @@
     line-height: 1.7;
   }
 
-  .roadmapStatsIconImage {
-    width: 32px;
-    height: 32px;
-  }
-
   .roadmapStatsPercent {
     font-size: 1.75rem;
   }
@@ -2750,6 +2733,12 @@
     font-size: 0.85rem;
     padding: 0.875rem 1rem;
   }
+}
+
+/* ==================== MACHINE LEARNING SPECIFIC STYLES ==================== */
+
+.mlProgressCard {
+  border-color: #f97316;
 }
 
 /* ==================== DEEP LEARNING SPECIFIC STYLES ==================== */
@@ -2835,6 +2824,241 @@
   color: #7c3aed;
 }
 
+/* ==================== EXTRA RESOURCES STYLES ==================== */
+
+.extraResourcesMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-radius: 16px;
+  border: 2px solid #10b981;
+}
+
+.extraResourcesEmoji {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.extraResourcesMessage p {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #047857;
+  line-height: 1.6;
+}
+
+.resourceItemLink {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-decoration: none;
+  word-break: break-all;
+  transition: color 0.2s;
+}
+
+.resourceItemLink:hover {
+  color: #374151;
+  text-decoration: underline;
+}
+
+/* Extra Dropdown Color Variants */
+.extraDropdownOrange {
+  margin-top: 1rem;
+  border-color: #f97316;
+}
+
+.extraHeaderOrange {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+}
+
+.extraHeaderOrange.expanded {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd520 100%);
+}
+
+.orangePlaylistLink {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+}
+
+.extraDropdownPurple {
+  margin-top: 1rem;
+  border-color: #8b5cf6;
+}
+
+.extraHeaderPurple {
+  background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
+}
+
+.extraHeaderPurple.expanded {
+  background: linear-gradient(135deg, #faf5ff 0%, #ede9fe20 100%);
+}
+
+.purplePlaylistLink {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+}
+
+.extraDropdownGreen {
+  margin-top: 1rem;
+  border-color: #10b981;
+}
+
+.extraHeaderGreen {
+  background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+}
+
+.extraHeaderGreen.expanded {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae520 100%);
+}
+
+.greenPlaylistLink {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.extraDropdownBlue {
+  margin-top: 1rem;
+  border-color: #3b82f6;
+}
+
+.extraHeaderBlue {
+  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.extraHeaderBlue.expanded {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe20 100%);
+}
+
+.bluePlaylistLink {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+.extraDropdownPink {
+  margin-top: 1rem;
+  border-color: #ec4899;
+}
+
+.extraHeaderPink {
+  background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%);
+}
+
+.extraHeaderPink.expanded {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f320 100%);
+}
+
+.extraDropdownTeal {
+  margin-top: 1rem;
+  border-color: #14b8a6;
+}
+
+.extraHeaderTeal {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%);
+}
+
+.extraHeaderTeal.expanded {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf120 100%);
+}
+
+.extraDropdownGold {
+  margin-top: 1rem;
+  border-color: #f59e0b;
+}
+
+.extraHeaderGold {
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.extraHeaderGold.expanded {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c720 100%);
+}
+
+.goldPlaylistLink {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+}
+
+.extraDropdownEmerald {
+  margin-top: 1rem;
+  border-color: #059669;
+}
+
+.extraHeaderEmerald {
+  background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+}
+
+.extraHeaderEmerald.expanded {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae520 100%);
+}
+
+.emeraldPlaylistLink {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+}
+
+/* Andrew Ng Note */
+.andrewNgNote {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 12px;
+  border-left: 4px solid #f59e0b;
+  font-size: 0.95rem;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.andrewNgNote strong {
+  color: #78350f;
+}
+
+/* Nested Dropdown for Financial Aid Template */
+.nestedDropdown {
+  margin-top: 1rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.nestedDropdownHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+  transition: background 0.2s;
+}
+
+.nestedDropdownHeader:hover {
+  background: #f3f4f6;
+}
+
+.nestedDropdownHeader.expanded {
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.nestedDropdownContent {
+  padding: 1.25rem;
+  background: white;
+}
+
+.nestedDropdownContent p {
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+.nestedDropdownContent p:last-child {
+  margin-bottom: 0;
+}
+
 /* ==================== RESPONSIVE DL STYLES ==================== */
 
 @media (max-width: 768px) {
@@ -2853,6 +3077,49 @@
   .dlDropdown {
     margin-top: 1rem;
   }
+
+  .extraResourcesMessage {
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .extraResourcesEmoji {
+    font-size: 1.5rem;
+  }
+
+  .extraResourcesMessage p {
+    font-size: 0.95rem;
+  }
+
+  .extraDropdownOrange,
+  .extraDropdownPurple,
+  .extraDropdownGreen,
+  .extraDropdownBlue,
+  .extraDropdownPink,
+  .extraDropdownTeal,
+  .extraDropdownGold,
+  .extraDropdownEmerald {
+    margin-top: 0.75rem;
+  }
+
+  .andrewNgNote {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .nestedDropdownHeader {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .nestedDropdownContent {
+    padding: 1rem;
+  }
+
+  .nestedDropdownContent p {
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2866,5 +3133,42 @@
 
   .playlistUrlLink {
     font-size: 0.75rem;
+  }
+
+  .extraResourcesMessage {
+    padding: 1rem;
+    gap: 0.75rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .extraResourcesEmoji {
+    font-size: 1.75rem;
+  }
+
+  .extraResourcesMessage p {
+    font-size: 0.9rem;
+  }
+
+  .resourceItemLink {
+    font-size: 0.75rem;
+  }
+
+  .andrewNgNote {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .nestedDropdownHeader {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .nestedDropdownContent {
+    padding: 0.875rem;
+  }
+
+  .nestedDropdownContent p {
+    font-size: 0.8rem;
   }
 }
