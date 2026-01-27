@@ -2434,6 +2434,55 @@
   gap: 1rem;
 }
 
+/* Dropdown Completed State */
+.dropdownCompleted {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.headerCompleted {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+}
+
+.headerCompleted.expanded {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+}
+
+.completedCheckmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  animation: checkmarkPop 0.3s ease-out;
+}
+
+@keyframes checkmarkPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.progressCompleted {
+  background: #d1fae5 !important;
+  color: #059669 !important;
+}
+
 .dropdownProgress {
   font-size: 1rem;
   font-weight: 600;
@@ -2641,6 +2690,12 @@
     font-size: 1.125rem;
   }
 
+  .completedCheckmark {
+    width: 24px;
+    height: 24px;
+    font-size: 0.875rem;
+  }
+
   .dropdownHeaderRight {
     flex-wrap: wrap;
   }
@@ -2717,6 +2772,13 @@
 
   .dropdownTitle {
     font-size: 1rem;
+  }
+
+  .completedCheckmark {
+    width: 22px;
+    height: 22px;
+    font-size: 0.8rem;
+    margin-right: 0.375rem;
   }
 
   .topicCheckbox {

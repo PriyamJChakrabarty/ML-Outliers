@@ -275,6 +275,24 @@ export default function HomePage() {
       total: ml.total + dl.total
     };
   };
+
+  // Check if ML section is fully completed
+  const isMLCompleted = () => {
+    const stats = getMLRoadmapStats();
+    return stats.total > 0 && stats.completed === stats.total;
+  };
+
+  // Check if DL section is fully completed
+  const isDLCompleted = () => {
+    const stats = getDLRoadmapStats();
+    return stats.total > 0 && stats.completed === stats.total;
+  };
+
+  // Check if extra resource dropdowns are completed
+  const isExtraDropdownCompleted = (itemIds) => {
+    if (!itemIds || itemIds.length === 0) return false;
+    return itemIds.every(id => roadmapCompletions[id]);
+  };
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [modulesData, setModulesData] = useState([
     {
@@ -1706,17 +1724,18 @@ export default function HomePage() {
             {/* Roadmap Content - Dropdowns */}
             <div className={styles.roadmapContent}>
               {/* Traditional Machine Learning Dropdown */}
-              <div className={styles.roadmapDropdown}>
+              <div className={`${styles.roadmapDropdown} ${isMLCompleted() ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${expandedSections.ml ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${expandedSections.ml ? styles.expanded : ''} ${isMLCompleted() ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('ml')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isMLCompleted() && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.ml ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>Traditional Machine Learning</span>
                   </div>
                   <div className={styles.dropdownHeaderRight}>
-                    <span className={styles.dropdownProgress}>
+                    <span className={`${styles.dropdownProgress} ${isMLCompleted() ? styles.progressCompleted : ''}`}>
                       {getMLRoadmapStats().completed}/{getMLRoadmapStats().total}
                     </span>
                     <a
@@ -1772,17 +1791,18 @@ export default function HomePage() {
               </div>
 
               {/* Deep Learning Dropdown */}
-              <div className={`${styles.roadmapDropdown} ${styles.dlDropdown}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.dlDropdown} ${isDLCompleted() ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.dlHeader} ${expandedSections.dl ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.dlHeader} ${expandedSections.dl ? styles.expanded : ''} ${isDLCompleted() ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('dl')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isDLCompleted() && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.dl ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>Deep Learning</span>
                   </div>
                   <div className={styles.dropdownHeaderRight}>
-                    <span className={`${styles.dropdownProgress} ${styles.dlProgress}`}>
+                    <span className={`${styles.dropdownProgress} ${styles.dlProgress} ${isDLCompleted() ? styles.progressCompleted : ''}`}>
                       {getDLRoadmapStats().completed}/{getDLRoadmapStats().total}
                     </span>
                     <a
@@ -1844,12 +1864,13 @@ export default function HomePage() {
               </div>
 
               {/* 1. ML Projects for Learning */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownOrange}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownOrange} ${isExtraDropdownCompleted(['extra-ml-projects']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderOrange} ${expandedSections.mlProjects ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderOrange} ${expandedSections.mlProjects ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-ml-projects']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('mlProjects')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-ml-projects']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.mlProjects ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>🔧 ML Projects for Learning</span>
                   </div>
@@ -1888,12 +1909,13 @@ export default function HomePage() {
               </div>
 
               {/* 2. DL Projects for Learning */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownPurple}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownPurple} ${isExtraDropdownCompleted(['extra-dl-projects']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderPurple} ${expandedSections.dlProjects ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderPurple} ${expandedSections.dlProjects ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-dl-projects']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('dlProjects')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-dl-projects']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.dlProjects ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>🧪 DL Projects for Learning</span>
                   </div>
@@ -1932,12 +1954,13 @@ export default function HomePage() {
               </div>
 
               {/* 3. ML Course by Andrew Ng */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownGreen}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownGreen} ${isExtraDropdownCompleted(['extra-andrew-ng']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderGreen} ${expandedSections.andrewNg ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderGreen} ${expandedSections.andrewNg ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-andrew-ng']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('andrewNg')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-andrew-ng']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.andrewNg ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>🎓 ML Course by Andrew Ng</span>
                   </div>
@@ -1997,12 +2020,13 @@ export default function HomePage() {
               </div>
 
               {/* 4. Vizuara playlist for Deep Learning */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownBlue}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownBlue} ${isExtraDropdownCompleted(['extra-vizuara']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderBlue} ${expandedSections.vizuara ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderBlue} ${expandedSections.vizuara ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-vizuara']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('vizuara')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-vizuara']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.vizuara ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>📺 Vizuara Playlist for Deep Learning</span>
                   </div>
@@ -2041,12 +2065,13 @@ export default function HomePage() {
               </div>
 
               {/* 5. LLMs */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownPink}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownPink} ${isExtraDropdownCompleted(['extra-llm-article', 'extra-karpathy']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderPink} ${expandedSections.llms ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderPink} ${expandedSections.llms ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-llm-article', 'extra-karpathy']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('llms')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-llm-article', 'extra-karpathy']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.llms ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>🤖 LLMs (Large Language Models)</span>
                   </div>
@@ -2090,12 +2115,13 @@ export default function HomePage() {
               </div>
 
               {/* 6. Reinforcement Learning */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownTeal}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownTeal} ${isExtraDropdownCompleted(['extra-rl-intro', 'extra-rl-handson', 'extra-rl-hf']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderTeal} ${expandedSections.rl ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderTeal} ${expandedSections.rl ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-rl-intro', 'extra-rl-handson', 'extra-rl-hf']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('rl')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-rl-intro', 'extra-rl-handson', 'extra-rl-hf']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.rl ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>🎮 Reinforcement Learning</span>
                   </div>
@@ -2155,12 +2181,13 @@ export default function HomePage() {
               </div>
 
               {/* 7. 3B1B Neural Networks */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownGold}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownGold} ${isExtraDropdownCompleted(['extra-3b1b']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderGold} ${expandedSections.threeB1B ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderGold} ${expandedSections.threeB1B ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-3b1b']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('threeB1B')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-3b1b']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.threeB1B ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>✨ 3B1B Neural Networks Awesome Visualisation</span>
                   </div>
@@ -2199,12 +2226,13 @@ export default function HomePage() {
               </div>
 
               {/* 8. Nicholas Renotte - Amazing Projects */}
-              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownEmerald}`}>
+              <div className={`${styles.roadmapDropdown} ${styles.extraDropdownEmerald} ${isExtraDropdownCompleted(['extra-nicholas']) ? styles.dropdownCompleted : ''}`}>
                 <button
-                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderEmerald} ${expandedSections.nicholasRenotte ? styles.expanded : ''}`}
+                  className={`${styles.roadmapDropdownHeader} ${styles.extraHeaderEmerald} ${expandedSections.nicholasRenotte ? styles.expanded : ''} ${isExtraDropdownCompleted(['extra-nicholas']) ? styles.headerCompleted : ''}`}
                   onClick={() => toggleSection('nicholasRenotte')}
                 >
                   <div className={styles.dropdownHeaderLeft}>
+                    {isExtraDropdownCompleted(['extra-nicholas']) && <span className={styles.completedCheckmark}>✓</span>}
                     <span className={styles.dropdownIcon}>{expandedSections.nicholasRenotte ? '▼' : '▶'}</span>
                     <span className={styles.dropdownTitle}>💡 Follow this channel for amazing projects!</span>
                   </div>
