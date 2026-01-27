@@ -165,61 +165,59 @@ export default function ProfilePage({ params }) {
           </div>
         </div>
 
-        {/* Roadmap Progress Section */}
-        {(roadmap?.mlTopicsCompleted > 0 || roadmap?.dlTopicsCompleted > 0) && (
-          <div className={styles.roadmapSection}>
-            <h2 className={styles.roadmapTitle}>Roadmap Progress</h2>
-            <div className={styles.roadmapProgressCards}>
-              {/* ML Progress */}
-              <div className={styles.roadmapProgressCard}>
-                <div className={styles.roadmapProgressHeader}>
-                  <div className={styles.roadmapProgressLeft}>
-                    <span className={styles.roadmapProgressIcon}>🤖</span>
-                    <div className={styles.roadmapProgressInfo}>
-                      <div className={styles.roadmapProgressLabel}>Machine Learning</div>
-                      <div className={styles.roadmapProgressValue}>
-                        {roadmap?.mlTopicsCompleted || 0}/{roadmap?.mlTopicsTotal || 20} topics
-                      </div>
+        {/* Roadmap Progress Section - Always shown */}
+        <div className={styles.roadmapSection}>
+          <h2 className={styles.roadmapTitle}>Roadmap Progress</h2>
+          <div className={styles.roadmapProgressCards}>
+            {/* ML Progress */}
+            <div className={styles.roadmapProgressCard}>
+              <div className={styles.roadmapProgressHeader}>
+                <div className={styles.roadmapProgressLeft}>
+                  <span className={styles.roadmapProgressIcon}>🤖</span>
+                  <div className={styles.roadmapProgressInfo}>
+                    <div className={styles.roadmapProgressLabel}>Machine Learning</div>
+                    <div className={styles.roadmapProgressValue}>
+                      {roadmap?.mlTopicsCompleted || 0}/{roadmap?.mlTopicsTotal || 20} topics
                     </div>
                   </div>
-                  <div className={styles.roadmapProgressPercent}>
-                    {roadmap?.mlTopicsTotal > 0 ? Math.round(((roadmap?.mlTopicsCompleted || 0) / roadmap.mlTopicsTotal) * 100) : 0}%
-                  </div>
                 </div>
-                <div className={styles.roadmapProgressBar}>
-                  <div
-                    className={styles.roadmapProgressFill}
-                    style={{ width: `${roadmap?.mlTopicsTotal > 0 ? ((roadmap?.mlTopicsCompleted || 0) / roadmap.mlTopicsTotal) * 100 : 0}%` }}
-                  ></div>
+                <div className={styles.roadmapProgressPercent}>
+                  {roadmap?.mlTopicsTotal > 0 ? Math.round(((roadmap?.mlTopicsCompleted || 0) / roadmap.mlTopicsTotal) * 100) : 0}%
                 </div>
               </div>
+              <div className={styles.roadmapProgressBar}>
+                <div
+                  className={styles.roadmapProgressFill}
+                  style={{ width: `${roadmap?.mlTopicsTotal > 0 ? ((roadmap?.mlTopicsCompleted || 0) / roadmap.mlTopicsTotal) * 100 : 0}%` }}
+                ></div>
+              </div>
+            </div>
 
-              {/* DL Progress */}
-              <div className={`${styles.roadmapProgressCard} ${styles.dlCard}`}>
-                <div className={styles.roadmapProgressHeader}>
-                  <div className={styles.roadmapProgressLeft}>
-                    <span className={styles.roadmapProgressIcon}>🧠</span>
-                    <div className={styles.roadmapProgressInfo}>
-                      <div className={styles.roadmapProgressLabel}>Deep Learning</div>
-                      <div className={styles.roadmapProgressValue}>
-                        {roadmap?.dlTopicsCompleted || 0}/{roadmap?.dlTopicsTotal || 14} topics
-                      </div>
+            {/* DL Progress */}
+            <div className={`${styles.roadmapProgressCard} ${styles.dlCard}`}>
+              <div className={styles.roadmapProgressHeader}>
+                <div className={styles.roadmapProgressLeft}>
+                  <span className={styles.roadmapProgressIcon}>🧠</span>
+                  <div className={styles.roadmapProgressInfo}>
+                    <div className={styles.roadmapProgressLabel}>Deep Learning</div>
+                    <div className={styles.roadmapProgressValue}>
+                      {roadmap?.dlTopicsCompleted || 0}/{roadmap?.dlTopicsTotal || 14} topics
                     </div>
                   </div>
-                  <div className={`${styles.roadmapProgressPercent} ${styles.dlPercent}`}>
-                    {roadmap?.dlTopicsTotal > 0 ? Math.round(((roadmap?.dlTopicsCompleted || 0) / roadmap.dlTopicsTotal) * 100) : 0}%
-                  </div>
                 </div>
-                <div className={styles.roadmapProgressBar}>
-                  <div
-                    className={`${styles.roadmapProgressFill} ${styles.dlProgressFill}`}
-                    style={{ width: `${roadmap?.dlTopicsTotal > 0 ? ((roadmap?.dlTopicsCompleted || 0) / roadmap.dlTopicsTotal) * 100 : 0}%` }}
-                  ></div>
+                <div className={`${styles.roadmapProgressPercent} ${styles.dlPercent}`}>
+                  {roadmap?.dlTopicsTotal > 0 ? Math.round(((roadmap?.dlTopicsCompleted || 0) / roadmap.dlTopicsTotal) * 100) : 0}%
                 </div>
+              </div>
+              <div className={styles.roadmapProgressBar}>
+                <div
+                  className={`${styles.roadmapProgressFill} ${styles.dlProgressFill}`}
+                  style={{ width: `${roadmap?.dlTopicsTotal > 0 ? ((roadmap?.dlTopicsCompleted || 0) / roadmap.dlTopicsTotal) * 100 : 0}%` }}
+                ></div>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
