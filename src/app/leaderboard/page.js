@@ -7,17 +7,16 @@ import Link from 'next/link';
 import styles from './leaderboard.module.css';
 
 export default function LeaderboardPage() {
-  const [timeFilter, setTimeFilter] = useState('all-time');
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [currentUserRank, setCurrentUserRank] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch leaderboard data from API
+  // Fetch leaderboard data from API (global/all-time only)
   useEffect(() => {
     async function fetchLeaderboard() {
       setLoading(true);
       try {
-        const response = await fetch(`/api/leaderboard?filter=${timeFilter}`);
+        const response = await fetch(`/api/leaderboard?filter=all-time`);
         const data = await response.json();
 
         // Show ALL users, including those with 0 exercises
@@ -33,7 +32,7 @@ export default function LeaderboardPage() {
     }
 
     fetchLeaderboard();
-  }, [timeFilter]);
+  }, []);
 
   // Use real data from database - NO MOCK DATA
   const currentLeaderboard = leaderboardData;
@@ -68,30 +67,8 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
-        {/* Time Filters */}
-        <div className={styles.filters}>
-          <button
-            className={`${styles.filterButton} ${timeFilter === 'all-time' ? styles.filterActive : ''}`}
-            onClick={() => setTimeFilter('all-time')}
-          >
-            All Time
-          </button>
-          <button
-            className={`${styles.filterButton} ${timeFilter === 'monthly' ? styles.filterActive : ''}`}
-            onClick={() => setTimeFilter('monthly')}
-          >
-            This Month
-          </button>
-          <button
-            className={`${styles.filterButton} ${timeFilter === 'weekly' ? styles.filterActive : ''}`}
-            onClick={() => setTimeFilter('weekly')}
-          >
-            This Week
-          </button>
-        </div>
-
         {/* Top 3 Podium */}
-        {timeFilter === 'all-time' && !loading && currentLeaderboard.length >= 3 && (
+        {!loading && currentLeaderboard.length >= 3 && (
           <div className={styles.podium}>
             {/* 2nd Place */}
             <div className={`${styles.podiumPlace} ${styles.secondPlace}`}>
@@ -213,10 +190,6 @@ export default function LeaderboardPage() {
                           <span className={styles.statItem}>
                             <span className={styles.statIcon}>✨</span>
                             {exercisesCount} exercises
-                          </span>
-                          <span className={styles.statItem}>
-                            <span className={styles.statIcon}>🔥</span>
-                            {user.currentStreak || user.streak || 0} day streak
                           </span>
                         </div>
                       </div>

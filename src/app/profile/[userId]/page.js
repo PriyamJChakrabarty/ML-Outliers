@@ -140,27 +140,11 @@ export default function ProfilePage({ params }) {
             </div>
           </div>
 
-          <div className={`${styles.statCard} ${styles.statCardOrange}`}>
-            <div className={styles.statIcon}>🔥</div>
-            <div className={styles.statInfo}>
-              <div className={styles.statValue}>{stats.currentStreak}</div>
-              <div className={styles.statLabel}>Current Streak</div>
-            </div>
-          </div>
-
           <div className={`${styles.statCard} ${styles.statCardGold}`}>
             <div className={styles.statIcon}>🏆</div>
             <div className={styles.statInfo}>
               <div className={styles.statValue}>{stats.totalPoints}</div>
               <div className={styles.statLabel}>Total Points</div>
-            </div>
-          </div>
-
-          <div className={`${styles.statCard} ${styles.statCardGreen}`}>
-            <div className={styles.statIcon}>📈</div>
-            <div className={styles.statInfo}>
-              <div className={styles.statValue}>{stats.longestStreak}</div>
-              <div className={styles.statLabel}>Longest Streak</div>
             </div>
           </div>
         </div>
