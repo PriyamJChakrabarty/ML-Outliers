@@ -1549,64 +1549,64 @@ export default function HomePage() {
                   <Image
                     src="/assets/Roadmap/Intro/1.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame1}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/2.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame2}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/3.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame3}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/4.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame4}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/5.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame5}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/6.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame6}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/7.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame7}`}
                     unoptimized
                   />
                   <Image
                     src="/assets/Roadmap/Intro/8.png?v=2"
                     alt="Roadmap Animation"
-                    width={400}
-                    height={400}
+                    width={500}
+                    height={500}
                     className={`${styles.roadmapAnimImage} ${styles.roadmapFrame8}`}
                     unoptimized
                   />
@@ -1620,7 +1620,13 @@ export default function HomePage() {
               <div className={styles.roadmapStatsCardMerged}>
                 <div className={styles.roadmapStatsHeader}>
                   <div className={styles.roadmapStatsLeft}>
-                    <div className={styles.roadmapStatsIcon}>🤖</div>
+                    <Image
+                      src="/assets/Roadmap/emoji/ML.png"
+                      alt="ML"
+                      width={48}
+                      height={48}
+                      className={styles.roadmapStatsIconImage}
+                    />
                     <div className={styles.roadmapStatsInfo}>
                       <div className={styles.roadmapStatsValue}>
                         {getMLRoadmapStats().completed}<span className={styles.roadmapStatsMax}>/{getMLRoadmapStats().total}</span>
@@ -1648,7 +1654,13 @@ export default function HomePage() {
               <div className={`${styles.roadmapStatsCardMerged} ${styles.dlProgressCard}`}>
                 <div className={styles.roadmapStatsHeader}>
                   <div className={styles.roadmapStatsLeft}>
-                    <div className={styles.roadmapStatsIcon}>🧠</div>
+                    <Image
+                      src="/assets/Roadmap/emoji/DL.png"
+                      alt="DL"
+                      width={48}
+                      height={48}
+                      className={styles.roadmapStatsIconImage}
+                    />
                     <div className={styles.roadmapStatsInfo}>
                       <div className={styles.roadmapStatsValue}>
                         {getDLRoadmapStats().completed}<span className={styles.roadmapStatsMax}>/{getDLRoadmapStats().total}</span>

@@ -1959,6 +1959,13 @@
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
 }
 
+.roadmapStatsIconImage {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
 .roadmapStatsInfo {
   flex: 1;
 }
@@ -2180,8 +2187,8 @@
 
 .roadmapAnimationLarge {
   position: relative;
-  width: 350px;
-  height: 350px;
+  width: 450px;
+  height: 450px;
 }
 
 .roadmapAnimationLarge .roadmapAnimImage {
@@ -2562,8 +2569,8 @@
   }
 
   .roadmapAnimationLarge {
-    width: 280px;
-    height: 280px;
+    width: 350px;
+    height: 350px;
   }
 }
 
@@ -2576,12 +2583,17 @@
   }
 
   .roadmapAnimationLarge {
-    width: 220px;
-    height: 220px;
+    width: 280px;
+    height: 280px;
   }
 
   .roadmapIntroText p {
     font-size: 0.95rem;
+  }
+
+  .roadmapStatsIconImage {
+    width: 36px;
+    height: 36px;
   }
 
   .roadmapStatsCardMerged {
@@ -2676,13 +2688,18 @@
   }
 
   .roadmapAnimationLarge {
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
   }
 
   .roadmapIntroText p {
     font-size: 0.9rem;
     line-height: 1.7;
+  }
+
+  .roadmapStatsIconImage {
+    width: 32px;
+    height: 32px;
   }
 
   .roadmapStatsPercent {
