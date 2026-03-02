@@ -139,6 +139,3 @@ Contributions, suggestions, and feedback are welcome! Feel free to open an issue
 
 MIT License — feel free to use, modify, and share.
 
----
-
-The README highlights React/Next.js prominently in the tech stack table, calls out PostgreSQL with SQL knowledge, and surfaces REST API usage — all sourced from your `package.json`. Just replace the GitHub URL placeholder with your actual repo link before publishing!
