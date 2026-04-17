@@ -15,10 +15,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 config({ path: join(__dirname, '.env.local') });
 
+// const GEMINI_API_KEYS = [
+//   { name: 'GEMINI_API_KEY_1', key: process.env.GEMINI_API_KEY_1 },
+//   { name: 'GEMINI_API_KEY_2', key: process.env.GEMINI_API_KEY_2 },
+//   { name: 'GEMINI_API_KEY_3', key: process.env.GEMINI_API_KEY_3 },
+// ];
+
 const GEMINI_API_KEYS = [
-  { name: 'GEMINI_API_KEY_1', key: process.env.GEMINI_API_KEY_1 },
-  { name: 'GEMINI_API_KEY_2', key: process.env.GEMINI_API_KEY_2 },
-  { name: 'GEMINI_API_KEY_3', key: process.env.GEMINI_API_KEY_3 },
+  { name: 'GEMINI_API_KEY_1', key: process.env.URMENTOR_GEMINI_API_KEY},
 ];
 
 const GEMINI_MODEL = 'gemini-2.5-flash';

@@ -1,5 +1,3 @@
-Section 1
-
 The overall roadmap goes as follows - Initially you must learn the basics of python language followed by the important libraries of Numpy, Pandas, Matplotlib, Seaborn
 
 
